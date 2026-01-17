@@ -1,0 +1,57 @@
+<!-- templates/home.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title %}THE MATRIX {% endblock %}</title>
+    
+    <link rel="stylesheet" href="/static/css/style1.css">
+
+    {% block head %} {% endblock %}
+</head>
+<body>
+    <!-- Цифровой дождь -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- Основной макет -->
+    <div class="layout">
+        <!-- Шапка -->
+        <header class="matrix-header">
+            <div class="header-content">
+                <span class="system-id">USER: {{ username }}</span>
+                <span class="grade-tag">TASK: {{ task_id }}</span>
+                <span class="status">[ACTIVE]</span>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="matrix-main">
+            {% block content %}
+            <h1>Заголовок</h1>
+            <p class="instruction">The Matrix has you...</p>
+            
+            <!-- Пример картинки -->
+            <img src="/static/images/matrix-symbol.png" alt="Symbol" class="matrix-image" style="max-width: 120px;">
+            
+            <!-- Сюда можно вставлять любые блоки -->
+            {% endblock %}
+        </main>
+
+        <!-- Подвал -->
+        <footer class="matrix-footer">
+            {% block footbutton %}
+            <button class="matrix-btn logout-btn" onclick="confirmLogout()">Выйти</button>
+            {% endblock %}
+
+        </footer>
+    </div>
+
+    <script src="/static/js/script1.js"></script>
+    {% block script %}
+    
+
+    {% endblock %}
+</body>
+
+</html>

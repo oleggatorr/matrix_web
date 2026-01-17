@@ -1,0 +1,475 @@
+/* static/css/style.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    
+    background: #000;
+    color: #0f0; /* Неоново-зелёный */
+    font-family: 'MyCustomFont1', 'Verdana', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+    
+}
+
+/* Цифровой дождь (canvas) */
+#matrixCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Контент поверх дождя */
+.content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding-top: 20vh;
+    text-shadow: 0 0 10px #0f0;
+}
+
+h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.3rem;
+}
+
+.subtitle {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.highlight {
+    color: #0ff;
+    text-shadow: 0 0 8px #0ff;
+}
+
+.instruction {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+/* Кнопка в стиле Матрицы */
+.matrix-btn {
+    background: transparent;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 12px 32px;
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+}
+
+.matrix-btn:hover {
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px #0f0;
+    transform: scale(1.05);
+}
+
+/* Стили для изображений в стиле Матрицы */
+.matrix-image {
+    /* Фильтр: делает изображение монохромным с зелёным оттенком */
+    filter: 
+        grayscale(100%) 
+        brightness(0.8) 
+        contrast(1.2)
+        sepia(0.8) 
+        hue-rotate(70deg); /* превращает коричневый в зелёный */
+
+    /* Эффект "цифрового шума" */
+    box-shadow: 
+        0 0 10px rgba(0, 255, 0, 0.3),
+        inset 0 0 8px rgba(0, 255, 0, 0.2);
+
+    /* Скан-линии поверх (имитация CRT-монитора) */
+    background: 
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 1px,
+            rgba(0, 0, 0, 0.15) 1px,
+            rgba(0, 0, 0, 0.15) 2px
+        );
+
+    /* Анимация: лёгкое мерцание */
+    animation: matrix-flicker 3s infinite alternate;
+
+    /* Ограничения */
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #0f0;
+    display: block;
+    margin: 20px auto;
+}
+
+
+
+/* При наведении — усиление эффекта */
+.matrix-image:hover {
+    filter: 
+        grayscale(100%) 
+        brightness(1) 
+        contrast(1.4)
+        sepia(1) 
+        hue-rotate(70deg);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 0, 0.6),
+        inset 0 0 12px rgba(0, 255, 0, 0.4);
+}
+/* === Макет: шапка / основное / подвал === */
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+}
+
+/* Шапка */
+.matrix-header {
+    background: rgba(0, 20, 0, 0.7);
+    border-bottom: 1px solid #0f0;
+    padding: 8px 20px;
+    font-size: 1rem;
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+/* Основной контент */
+.matrix-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.matrix-main h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.2rem;
+}
+
+.instruction {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+/* Подвал */
+.matrix-footer {
+    background: rgba(0, 10, 0, 0.6);
+    
+    border-top: 1px solid #0f0;
+    padding: 12px 20px;
+    text-align: right;
+}
+
+.logout-btn {
+
+    background: transparent;
+    color: #f00; /* Красный — как "опасность" в Матрице */
+    border: 1px solid #f00;
+    padding: 8px 20px;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 10px #f00;
+}
+
+@font-face {
+    font-family: 'MyCustomFont1'; /* ← произвольное имя, которое вы будете использовать */
+    src: url('../fonts/F77.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* улучшает отображение при загрузке */
+}
+@font-face {
+    font-family: 'MyCustomFont2'; /* ← произвольное имя, которое вы будете использовать */
+    src: url('../fonts/VCR.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* улучшает отображение при загрузке */
+}
+
+
+/* === Стили для форм ввода (в стиле Матрицы) === */
+
+.matrix-form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    background: rgba(0, 15, 0, 0.4);
+    padding: 20px;
+    border: 1px solid #0f0;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    backdrop-filter: blur(2px); /* опционально, если поддерживается */
+}
+
+.matrix-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: 'VT323', monospace;
+    font-size: 1.3rem;
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+    letter-spacing: 1px;
+}
+
+.matrix-input,
+.matrix-textarea,
+.matrix-select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    background: rgba(0, 10, 0, 0.6);
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
+}
+
+.matrix-input::placeholder,
+.matrix-textarea::placeholder {
+    color: rgba(0, 255, 0, 0.5);
+    opacity: 1;
+}
+
+.matrix-input:focus,
+.matrix-textarea:focus,
+.matrix-select:focus {
+    border-color: #0ff;
+    box-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.5),
+        inset 0 0 8px rgba(0, 255, 255, 0.3);
+    background: rgba(0, 20, 0, 0.7);
+}
+
+/* Эффект "сканирующего курсора" при фокусе (опционально) */
+.matrix-input:focus,
+.matrix-textarea:focus {
+    animation: matrix-flicker 4s infinite alternate;
+}
+
+/* Стиль для кнопки отправки формы */
+.matrix-submit-btn {
+    background: transparent;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 10px 24px;
+    font-family: 'VT323', monospace;
+    font-size: 1.3rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+}
+
+.matrix-submit-btn:hover {
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px #0f0;
+    transform: scale(1.05);
+}
+
+/* Анимация мерцания для полей при фокусе (используем существующую) */
+@keyframes matrix-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        opacity: 0.85;
+    }
+}
+
+
+/* === Стили для полей ввода в стиле Матрицы === */
+.matrix-input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    background: rgba(0, 10, 0, 0.6);
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
+}
+
+.matrix-input::placeholder {
+    color: rgba(0, 255, 0, 0.5);
+    opacity: 1;
+}
+
+.matrix-input:focus {
+    border-color: #0ff;
+    box-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.5),
+        inset 0 0 8px rgba(0, 255, 255, 0.3);
+    background: rgba(0, 20, 0, 0.7);
+}
+/* Сетка символов */
+.symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.symbol-btn {
+    background: #000;
+    border: 1px solid #0f0;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.symbol-btn:hover {
+    transform: scale(1.1);
+}
+
+.symbol-btn img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    filter: brightness(1.2);
+}   
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+.modal-content {
+    background-color: #000;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #0f0;
+    width: 80%;
+    max-width: 500px;
+    color: #0f0;
+    font-family: monospace;
+}
+
+.close {
+    color: #0f0;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover { color: #fff; }
+
+/* Ошибка */
+.error-message {
+    color: #f00;
+    background: #111;
+    padding: 10px;
+    border: 1px solid #f00;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+
+/* === Сетка символов — гарантированно в строки === */
+.symbols-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin: 24px 0;
+    padding: 0;
+}
+
+.matrix-symbol-btn {
+    /* Сохраняем стиль "матрицы": чёрный фон, зелёная рамка */
+    background: #000;
+    border: 1px solid #0f0;
+    border-radius: 6px;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.matrix-symbol-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px #0f0;
+}
+
+.matrix-symbol-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(1.3);
+}
+.matrix-message-box {
+    background: rgba(0, 20, 0, 0.4);
+    border: 1px solid #0f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 25px 0;
+    text-align: center;
+    font-family: monospace;
+    color: #0f0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.matrix-message-box .symbol {
+    font-size: 14px;
+    color: #0a0;
+    margin-top: 12px;
+    letter-spacing: 2px;
+}

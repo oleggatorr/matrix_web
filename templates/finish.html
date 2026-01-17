@@ -1,0 +1,39 @@
+<!-- templates/finish.html -->
+{% extends "base.html" %}
+
+{% block title %}Доступ завершён{% endblock %}
+
+{% block content %}
+<h1>СИСТЕМА ЗАВЕРШЕНА</h1>
+<p class="instruction">Текст</p>
+
+<div class="matrix-message-box">
+    <p>Поздравляем, {{ username }}.</p>
+    <p>Текст</p>
+    <p class="symbol">01010011 01001001 01001110 01000111 01010101 01001100 01000001 01010010 01001001 01010100 01011001</p>
+</div>
+
+<button class="matrix-btn" onclick="finishSession()">Завершить сессию</button>
+{% endblock %}
+
+{% block footbutton %}
+<!-- Заменяем кнопку "Выйти" на "На главную" -->
+
+{% endblock %}
+
+{% block script %}
+<script>
+function finishSession() {
+    // Имитация "завершения" с эффектом
+    const btn = document.querySelector('button');
+    btn.textContent = "Отключение...";
+    btn.disabled = true;
+    
+    // Опционально: можно отправить запрос на /logout
+    setTimeout(() => {
+        alert("Сессия завершена. Спасибо за участие.");
+        window.location.href = "/logout";
+    }, 1500);
+}
+</script>
+{% endblock %}

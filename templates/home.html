@@ -1,0 +1,24 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать</title>
+</head>
+<body>
+    {% block content %}
+    <div class="user-info">
+        <h1>Привет, {{ username }}!</h1>
+    </div>
+    <h3>Текст</h3>
+    <br>
+    <!-- Кнопка-заглушка -->
+
+    <form method="post" action="/">
+    <button type="submit" class="matrix-btn">Начать задание</button>
+    </form>
+
+    <!-- Опционально: кнопка выхода -->
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Задание 1{% endblock %}
+
+{% block content %}
+<h1>Текст.</h1>
+<p class="instruction">Текст.</p>
+
+<!-- Сообщение об ошибке -->
+{% if error %}
+    <div class="error-message">{{ error }}</div>
+{% endif %}
+
+<!-- Кнопки с картинками -->
+<div class="symbols-container">
+    {% for symbol in symbols %}
+    <button type="button" class="matrix-symbol-btn" onclick="showMessage('{{ symbol.message | e }}')">
+        <img src="{{ symbol.image }}" alt="Символ">
+    </button>
+    {% endfor %}
+</div>
+
+<!-- Форма ввода кода -->
+<form method="post">
+    <div class="input-group">
+        <label for="code">Код:</label>
+        <input 
+            type="text"     
+            id="code" 
+            name="code" 
+            class="matrix-input" 
+            required 
+            value="{{ code or '' }}"
+        >
+    </div>
+    <button type="submit" class="matrix-btn">ВОЙТИ</button>
+</form>
+{% endblock %}
+
+{% block script %}
+<script>
+function showMessage(text) {
+    alert(text); // Просто и надёжно — без модальных окон
+}
+</script>
+{% endblock %}

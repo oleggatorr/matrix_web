@@ -1,0 +1,41 @@
+<!-- templates/login.html -->
+
+{% extends "base.html" %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <!-- style>
+        
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style -->>
+</head>
+<body>
+{% block content %}
+<div class="matrix-form">
+    <h2>ВОЙДИТЕ В СИСТЕМУ</h2>
+    <form method="post">
+        <div>
+            <label for="username">ИМЯ ПОЛЬЗОВАТЕЛЯ:</label>
+            <input type="text" id="username" name="username" class="matrix-input" required>
+        </div>
+        <div>
+            <label for="grade">КЛАСС:</label>
+            <input type="text" id="grade" name="grade" class="matrix-input" required>
+        </div>
+        <button type="submit" class="matrix-btn">ВОЙТИ</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block footbutton %}
+    
+    <a href="/list" class="matrix-btn logout-btn">Список участников</a>
+{% endblock %}
+
+</body>>
