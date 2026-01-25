@@ -1,33 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Задание 1{% endblock %}
+{% block title %}Задание 3{% endblock %}
 
 {% block content %}
-<h1>Текст.</h1>
-<p class="instruction">Текст.</p>
+<h1>Изменение размера окна</h1>
+<p class="instruction">Система спрятала подтверждение в глубинах интерфейса. Измени масштаб отображения (Ctrl + Minus).</p>
 
-<!-- Сообщение об ошибке -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
 {% endif %}
 
-<!-- Форма ввода кода -->
-<form method="post">
-    <div class="input-group">
-        <label for="code">Ответ:</label>
-        <input 
-            type="text"     
-            id="code" 
-            name="code" 
-            class="matrix-input" 
-            required 
-            value="{{ code or '' }}"
-        >
-    </div>
-    <button type="submit" class="matrix-btn">ВОЙТИ</button>
-</form>
+<!-- Секретное сообщение, видимое ТОЛЬКО при уменьшении масштаба -->
+<div class="hidden-terminal" style="
+    font-size: 0.1px;
+    color: transparent;
+    text-shadow: 0 0 3px lime;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 20vh;
+    transition: all 0.3s;
+">
+    [ТЕРМИНАЛ АКТИВЕН]
+</div>
+
+<!-- Пустое пространство -->
+<div style="height: 40vh;"></div>
+
+<!-- Кнопка в самом низу -->
+<div style="text-align: center; margin-bottom: 80px;">
+    <form method="post">
+        <button type="submit" name="zoom_confirmed" value="ZOOMED" class="matrix-btn">
+            [ДОСТУП ПОДТВЕРЖДЁН]
+        </button>
+    </form>
+</div>
 {% endblock %}
 
 {% block script %}
-
+<!-- Никакого JS не нужно. Всё работает через CSS и форму. -->
 {% endblock %}

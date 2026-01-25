@@ -1,0 +1,23 @@
+# Виртуальные окружения
+env/
+venv/
+.venv/
+
+# Байт-код Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE / редакторы
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Переменные окружения
+.env
+.env.local
+
+# Логи и прочее
+*.log

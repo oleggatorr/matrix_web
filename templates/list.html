@@ -111,6 +111,8 @@
                         <td>{{ user.grade or '—' }}</td>
                         <td>{{ user.start_time.strftime('%Y-%m-%d %H:%M:%S') if user.start_time else '—' }}</td>
                         <td>{{ user.end_time.strftime('%Y-%m-%d %H:%M:%S') if user.end_time else '—' }}</td>
+                        <td>{{ user.solved_tasks }}</td>
+                        <td>{{ user.active_task }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

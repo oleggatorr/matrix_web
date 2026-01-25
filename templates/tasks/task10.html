@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Задание 10{{ task_id }}{% endblock %}
+
+{% block content %}
+<h1>Решить пример</h1>
+<p class="instruction">Описание или инструкция к заданию. Здесь может быть любой текст.</p>
+
+<!-- Картинка -->
+<img src="/static/images/phone.png" alt="Описание" 
+     class="matrix-image"
+     style="width: 250px; height: auto;" 
+     class="matrix-image">
+
+<!-- Сообщение об ошибке (если есть) -->
+{% if error %}
+    <div class="error-message">{{ error }}</div>
+{% endif %}
+
+<!-- Форма с полем ввода -->
+<form method="post">
+    <div class="input-group">
+        <label for="answer">Ответ:</label>
+        <input 
+            type="text" 
+            id="code" 
+            name="code" 
+            class="matrix-input" 
+            required 
+            value="{{ code  or '' }}"
+        >
+    </div>
+    <button type="submit" class="matrix-btn">Подтвердить</button>
+</form>
+{% endblock %}
+
+{% block script %}
+<!-- Дополнительный JS можно добавить здесь при необходимости -->
+{% endblock %}

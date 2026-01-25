@@ -10,4 +10,5 @@ class User(Base):
     grade = Column(String, index=True)  # убрал unique=True, если это не требуется
     start_time = Column(DateTime, nullable=True)
     end_time = Column(DateTime, nullable=True)
-
+    solved_tasks = Column(Integer)
+    active_task = Column(Integer, nullable=True)

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Задание 7{{ task_id }}{% endblock %}
+
+{% block content %}
+<h1>Таймер</h1>
+<p class="instruction">Система автоматически завершит текущую операцию через <span id="countdown">5</span> секунд...</p>
+
+<!-- Скрытая форма для автоматической отправки -->
+<form id="autoSubmitForm" method="post">
+    <!-- Отправляем то, что ожидает TASKS[task_id]["expected"] -->
+    
+</form>
+
+<!-- Опционально: кнопка "пропустить ожидание" (если разрешено) -->
+<!--
+<button type="button" class="matrix-btn" onclick="document.getElementById('autoSubmitForm').submit();">
+    Активировать сейчас
+</button>
+-->
+{% endblock %}
+
+{% block script %}
+<script>
+// Время в секундах (должно совпадать с логикой задания)
+const countdownSeconds = 5;
+let timeLeft = countdownSeconds;
+
+const countdownEl = document.getElementById('countdown');
+const form = document.getElementById('autoSubmitForm');
+
+const timer = setInterval(() => {
+    timeLeft--;
+    countdownEl.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+        clearInterval(timer);
+        form.submit(); // Отправляем форму
+    }
+}, 1000);
+</script>
+{% endblock %}
+
+
+<!--TASKS = {
+    3: {
+        "input_fields": ["auto_timer"],          # обязательно!
+        "expected": {"auto_timer": "COMPLETED"}, # именно эти данные отправятся
+        "error_message": "Таймер был прерван. Повторите попытку.",
+        "can_pass": True,
+        "key": "TIMER_COMPLETE"
+    }
+}-->
