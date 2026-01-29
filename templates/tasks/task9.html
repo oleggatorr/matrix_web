@@ -3,29 +3,24 @@
 {% block title %}Задание 9{% endblock %}
 
 {% block content %}
-<h1>Поменять Url адрес для перехода</h1>
-<p class="instruction">Текст.</p>
+<h1>Проложи свой путь</h1>
+<p class="instruction">«Агенты перехватили наш маршрут. Прогресс утерян. Но в Матрице нет тупиков — есть только те, кто боится выбрать новый путь.»</p>
+Смотри внимательно: <br>
+Текущий адрес — это точка 9. А тебе нужна точка 10.
+<br>
 
+<br>
+⚠️ Осторожно!
+Если введёшь неверный адрес — попадёшь в пустоту. <br>
+Не бойся: ты всегда можешь вернуться назад и попробовать снова.<br>
+Путь ждёт. Сделай шаг.
 <!-- Сообщение об ошибке -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
 {% endif %}
+<br>
+pass_code 2430
 
-<!-- Форма ввода кода -->
-<form method="post">
-    <div class="input-group">
-        <label for="code">Ответ:</label>
-        <input 
-            type="text"     
-            id="code" 
-            name="code" 
-            class="matrix-input" 
-            required 
-            value="{{ code or '' }}"
-        >
-    </div>
-    <button type="submit" class="matrix-btn">Текст</button>
-</form>
 {% endblock %}
 
 {% block script %}

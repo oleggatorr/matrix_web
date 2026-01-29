@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Задание 7{{ task_id }}{% endblock %}
+{% block title %}Задание 7{% endblock %}
 
 {% block content %}
-<h1>Таймер</h1>
-<p class="instruction">Система автоматически завершит текущую операцию через <span id="countdown">5</span> секунд...</p>
+<h1>Синхронизация с системой</h1>
+<p class="instruction">Персептрон запущен, назад пути нет.</p>Система проверяет твою готовность.
+Не пытайся обмануть время — оно работает на тебя.<br><br>
+<p class="instruction">Отправка через: <span id="countdown">--</span> секунд...</p>
 
 <!-- Скрытая форма для автоматической отправки -->
 <form id="autoSubmitForm" method="post">
@@ -23,7 +25,7 @@
 {% block script %}
 <script>
 // Время в секундах (должно совпадать с логикой задания)
-const countdownSeconds = 5;
+const countdownSeconds = 20;
 let timeLeft = countdownSeconds;
 
 const countdownEl = document.getElementById('countdown');

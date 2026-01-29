@@ -3,8 +3,9 @@
 {% block title %}Задание 3{% endblock %}
 
 {% block content %}
-<h1>Изменение размера окна</h1>
-<p class="instruction">Система спрятала подтверждение в глубинах интерфейса. Измени масштаб отображения (Ctrl + Minus).</p>
+<h1>Измени перспективу</h1>
+<p class="instruction">Чтобы увидеть целое — отступи. Чтобы понять систему — выйди за её границы.</p>
+<br><br><br><br><br><br><br><br>Размер задачи может пугать. Уменьшив её - станешь ближе к решению.
 
 {% if error %}
     <div class="error-message">{{ error }}</div>
@@ -20,7 +21,7 @@
     margin-top: 20vh;
     transition: all 0.3s;
 ">
-    [ТЕРМИНАЛ АКТИВЕН]
+   
 </div>
 
 <!-- Пустое пространство -->
@@ -30,7 +31,7 @@
 <div style="text-align: center; margin-bottom: 80px;">
     <form method="post">
         <button type="submit" name="zoom_confirmed" value="ZOOMED" class="matrix-btn">
-            [ДОСТУП ПОДТВЕРЖДЁН]
+            [ПРОДОЛЖИТЬ ПУТЬ]
         </button>
     </form>
 </div>

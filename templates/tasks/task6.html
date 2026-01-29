@@ -3,29 +3,39 @@
 {% block title %}Задание 6{% endblock %}
 
 {% block content %}
-<h1>Раскомментировать кнопку в режиме разработчика</h1>
-<p class="instruction">Текст.</p>
+<!-- Что ты тут ищешь, тебе тут нечего искать... -->
+<h1>Ничто не исчезает</h1>
+<!-- Дальше нечего смотреть -->
+<p class="instruction">«Даже если ты скажешь это про себя — система услышит.
+Даже если спрячешь — она запомнит.
+В Матрице нет забвения. Есть только то, что ещё не найдено.»</p>
+<!-- Почему ты продолжаешь? -->
 
-<!-- Сообщение об ошибке -->
+Ты ищешь выход.
+Он уже здесь — просто невидим.
+Загляни туда, где страница говорит сама с собой.
+<!-- Не надо -->
+Туда, где остаются следы даже самых тихих команд.
+Если попробуешь — поймёшь:
+ничто не пропадает бесследно.
+<br><br>//no_comments//
+
+<!-- Сообщение о твоей ошибке -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
 {% endif %}
 
-<!-- Форма ввода кода -->
-<form method="post">
-    <div class="input-group">
-        <label for="code">Ответ:</label>
-        <input 
-            type="text"     
-            id="code" 
-            name="code" 
-            class="matrix-input" 
-            required 
-            value="{{ code or '' }}"
-        >
-    </div>
-    <button type="submit" class="matrix-btn">Текст</button>
+<!-- shjdbflsg;ighskjbv;sheghv;kjsdbv;kafvahfvheg;kjhg'shvj;shviuekgbavalhjvcalhvfhav;ege;ghgg -->
+<br>
+<segment>
+<!-- 
+Кнопка для решения задачи. Раскомментировать для активации.
+<form method="post" style="margin-top: 20px;">
+    <button type="submit" class="matrix-btn">Двигаться дальше</button>
 </form>
+-->
+</segment>
+<!-- Ответ глубже, чем ты думаешь -->
 {% endblock %}
 
 {% block script %}

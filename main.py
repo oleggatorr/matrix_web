@@ -23,7 +23,7 @@ FINISH_CODE = 12345
 
 # Символы для задач (можно вынести в конфиг)
 SYMBOLS = [
-    {"image": "/static/images/phone.png", "message": "Сообщение 1", "id": "0"},
+    {"image": "/static/images/phone2.png", "message": "Сообщение 1", "id": "0"},
 ]
 
 # Dependency для базы данных
@@ -200,18 +200,18 @@ async def task_page(
 
     match task_id:
         case 1:
-            context = {**base_context, "symbols": SYMBOLS, "correct_symbol_id": "0"}
+            context = {**base_context}
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         case 2:
-            context = {**base_context, "symbols": SYMBOLS, "correct_symbol_id": "0"}
+            context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS"), "correct_symbol_id": "0"}
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         case 3:
-
+            
             context = {**base_context, "symbols": SYMBOLS}
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         case 4:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS")}
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         case 5:
 
@@ -345,9 +345,9 @@ async def task_submit(
         }
 
         # Добавляем специфичные данные (если нужно)
-        if task_id == 2:
+        if task_id in {2,4}:
             base_context.update({
-                "symbols": SYMBOLS,
+                "symbols": TASKS.get(task_id).get("SYMBOLS"),
                 "correct_symbol_id": "0"  # или из конфига
             })
         elif task_id == 3:

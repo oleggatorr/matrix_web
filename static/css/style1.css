@@ -63,7 +63,7 @@ h1 {
     color: #0f0;
     border: 1px solid #0f0;
     padding: 12px 32px;
-    font-family: 'VT323', monospace;
+    font-family: 'MyCustomFont1', 'Verdana', sans-serif;
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.3s;
@@ -194,7 +194,7 @@ h1 {
     color: #f00; /* Красный — как "опасность" в Матрице */
     border: 1px solid #f00;
     padding: 8px 20px;
-    font-family: 'VT323', monospace;
+    font-family: 'MyCustomFont2', 'Verdana', sans-serif;
     font-size: 1.1rem;
     cursor: pointer;
     text-transform: uppercase;
@@ -238,7 +238,7 @@ h1 {
 .matrix-form label {
     display: block;
     margin-bottom: 8px;
-    font-family: 'VT323', monospace;
+    font-family: 'MyCustomFont1', 'Verdana', sans-serif;
     font-size: 1.3rem;
     color: #0f0;
     text-shadow: 0 0 5px #0f0;
@@ -387,7 +387,7 @@ h1 {
     width: 80%;
     max-width: 500px;
     color: #0f0;
-    font-family: monospace;
+    font-family: 'MyCustomFont2', 'Verdana', sans-serif;
 }
 
 .close {
@@ -460,7 +460,7 @@ h1 {
     padding: 20px;
     margin: 25px 0;
     text-align: center;
-    font-family: monospace;
+    font-family: 'MyCustomFont2', 'Verdana', sans-serif;
     color: #0f0;
     max-width: 600px;
     margin-left: auto;

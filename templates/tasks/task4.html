@@ -3,8 +3,8 @@
 {% block title %}Задание 4{% endblock %}
 
 {% block content %}
-<h1>Ввести код с сообщения по кнопке</h1>
-<p class="instruction">Текст.</p>
+<h1>Найди спрятанный код</h1>
+<p class="instruction">Один из наших союзников должен передать код. Выбери правильный телефон.</p>
 
 <!-- Сообщение об ошибке -->
 {% if error %}
@@ -33,7 +33,7 @@
             value="{{ code or '' }}"
         >
     </div>
-    <button type="submit" class="matrix-btn">Текст</button>
+    <button type="submit" class="matrix-btn">Активировать</button>
 </form>
 {% endblock %}
 
