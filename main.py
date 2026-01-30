@@ -242,8 +242,7 @@ async def task_page(
             context = {**base_context, "symbols": SYMBOLS}
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         case 12:
-
-            context = {**base_context, "symbols": SYMBOLS}
+            context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS"), "correct_symbol_id": "0"}
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         case 13:
 
@@ -345,7 +344,7 @@ async def task_submit(
         }
 
         # Добавляем специфичные данные (если нужно)
-        if task_id in {2,4}:
+        if task_id in {2,4, 12}:
             base_context.update({
                 "symbols": TASKS.get(task_id).get("SYMBOLS"),
                 "correct_symbol_id": "0"  # или из конфига

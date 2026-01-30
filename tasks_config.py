@@ -109,15 +109,15 @@ TASKS = {
         "title": "Задание 10",
         "key": 2430,
         "input_fields": ["code"],  
-        "expected": {"code": "12345"},
+        "expected": {"code": "36"},
         "error_message": "wrong answer",
-        "can_pass":False,
+        "can_pass":True,
     },
     11: {
         "title": "Задание 11",
         "key": 2430,
         "input_fields": ["code"],  
-        "expected": {"code": "12345"},
+        "expected": {"code": "CYBER"},
         "error_message": "wrong answer",
         "can_pass":False,
     },
@@ -125,19 +125,14 @@ TASKS = {
     12: {
         "title": "Задание 12",
         "key": 2430,
-        "input_fields": ["code"],  
-        "expected": {"code": "12345"},
+        "input_fields": ["selected_id"],  
+        "expected": {"selected_id": "0"},
         "error_message": "wrong answer",
         "can_pass":False,
-    },
-
-    12: {
-        "title": "Задание 12",
-        "key": 2430,
-        "input_fields": ["code"],  
-        "expected": {"code": "12345"},
-        "error_message": "wrong answer",
-        "can_pass":False,
+         "SYMBOLS":[{"image": "/static/images/phone1.png", "message": "Это отдел полиции. Представьтесь и назовите цель вызова.", "id": "0"},
+    {"image": "/static/images/phone2.png", "message": "Здравствуйте! Вы позвонили в службу доставки “Быстрый Бит”. Оставьте сообщение после сигнала.", "id": "0"},
+    {"image": "/static/images/phone3.png", "message": "Внимание: уровень доступа недостаточен. Повторите попытку с авторизацией.", "id": "0"},
+         ]
     },
 
     13: {

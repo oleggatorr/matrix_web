@@ -1,31 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}Задание 1{% endblock %}
+{% block title %}Задание 12{% endblock %}
 
 {% block content %}
-<h1>Выбор кнопки</h1>
-<p class="instruction">Текст.</p>
+<h1>Правая или левая...</h1>
+<p class="instruction">И снова мы там откуда всё началось</p>
+<p>
+И снова ты стоишь на пороге.
+Перед тобой — два пути.
+</p>
+<br>
+<p>
+Система сгенерировала цветовой ключ.
+Чтобы понять, какую таблетку принять, реши уравнения:<br>
+<p>R: 3(R – 12) = 144</p>
+<p>G: G² = 64</p>
+<p>B: 2B + 18 = 150</p>
+</p>
 
-<!-- Сообщение об ошибке -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
 {% endif %}
 
-<!-- Форма ввода кода -->
-<form method="post">
-    <div class="input-group">
-        <label for="code">Ответ:</label>
-        <input 
-            type="text"     
-            id="code" 
-            name="code" 
-            class="matrix-input" 
-            required 
-            value="{{ code or '' }}"
-        >
-    </div>
-    <button type="submit" class="matrix-btn">Текст</button>
-</form>
+<div class="symbols-container">
+    {% for symbol in symbols %}
+        <form method="post" style="display: inline-block; margin: 10px;">
+            <button type="submit" name="selected_id" value="{{ symbol.id }}" class="matrix-symbol-btn">
+                <img src="{{ symbol.image }}" alt="Символ">
+            </button>
+        </form>
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block script %}

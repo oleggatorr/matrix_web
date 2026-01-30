@@ -3,15 +3,22 @@
 {% block title %}Задание 10{{ task_id }}{% endblock %}
 
 {% block content %}
-<h1>Решить пример</h1>
-<p class="instruction">Описание или инструкция к заданию. Здесь может быть любой текст.</p>
+<h1>Держи порт на коротком проводе</h1>
+<p class="instruction">Для прямой загрузки скриптов в Матрицу используются терминалы модели IBM-5000100.
+Каждый терминал имеет:<br>
+– 3 USB-порта,<br>
+– 2 HDMI-порта,<br>
+– 1 разъём питания.<br>
+Для активации все порты должны быть подключены кабелями длиной 3 метра каждый.
+Сколько всего метров кабеля потребуется для двух таких терминалов?
+</p>
 
-<!-- Картинка -->
+<!-- Картинка 
 <img src="/static/images/phone.png" alt="Описание" 
      class="matrix-image"
      style="width: 250px; height: auto;" 
      class="matrix-image">
-
+-->
 <!-- Сообщение об ошибке (если есть) -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
@@ -30,7 +37,7 @@
             value="{{ code  or '' }}"
         >
     </div>
-    <button type="submit" class="matrix-btn">Подтвердить</button>
+    <button type="submit" class="matrix-btn">Отправить</button>
 </form>
 {% endblock %}
 

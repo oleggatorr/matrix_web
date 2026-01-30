@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Задание 1{% endblock %}
+{% block title %}Задание 10{% endblock %}
 
 {% block content %}
-<h1>Пример на строки</h1>
-<p class="instruction">Текст.</p>
+<h1>Шумная передача</h1>
+<p class="instruction">Во время передачи важного сообщения произошли сильные помехи.
+Но у нас есть протокол очистки. Примени его — и получи истинный код<br><br>
+Сообщение: <span class="error-message">ceedtdecyybabaaberrar </span><br><br>
+Протокол восстановления (выполни по порядку, повторяя, пока возможно):<br>
+1)  Удали всё, кроме латинских букв<br>
+2)  Любые два одинаковых символа подряд заменяются на один: XX → X<br>
+3)  Символ, окружённый двумя одинаковыми символами, удалается: XYX → XX</p>
 
 <!-- Сообщение об ошибке -->
 {% if error %}
@@ -24,7 +30,7 @@
             value="{{ code or '' }}"
         >
     </div>
-    <button type="submit" class="matrix-btn">ВОЙТИ</button>
+    <button type="submit" class="matrix-btn">ОТПРАВИТЬ</button>
 </form>
 {% endblock %}
 
