@@ -3,6 +3,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background: #000;
+    
 }
 
 body {
@@ -39,6 +41,7 @@ h1 {
     font-size: 4rem;
     margin-bottom: 1.5rem;
     letter-spacing: 0.3rem;
+    
 }
 
 .subtitle {
@@ -55,6 +58,7 @@ h1 {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     opacity: 0.8;
+    
 }
 
 /* Кнопка в стиле Матрицы */
@@ -163,7 +167,7 @@ h1 {
     align-items: center;
     padding: 20px;
     text-align: center;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Матрица</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Цифровой дождь на фоне */
+        canvas#matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        /* Зеленый градиентный оверлей */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 10, 0, 0.95));
+            z-index: -1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: rgba(0, 10, 0, 0.9);
+            border: 2px solid #0f0;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3),
+                        inset 0 0 15px rgba(0, 255, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 550px;
+            margin: 50px auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0f0, transparent);
+            margin-top: 15px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7),
+                         0 0 20px rgba(0, 255, 0, 0.5);
+            animation: matrix-glow 2s ease-in-out infinite alternate;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .header h1::before,
+        .header h1::after {
+            content: '║';
+            margin: 0 10px;
+        }
+
+        .header p {
+            color: #0c0;
+            font-size: 16px;
+            margin-top: 15px;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group::before {
+            content: '>';
+            position: absolute;
+            left: -20px;
+            color: #0f0;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #0f0;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid #0f0;
+            border-radius: 4px;
+            color: #0f0;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            background: rgba(0, 30, 0, 0.9);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(0, 255, 0, 0.3);
+        }
+
+        .form-group .required {
+            color: #ff3366;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-text {
+            padding: 12px 15px;
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid #0f0;
+            border-radius: 4px;
+            color: #0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
+        }
+
+        .file-upload:hover .file-upload-text {
+            border-color: #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            background: rgba(0, 30, 0, 0.9);
+        }
+
+        .photo-preview {
+            margin-top: 10px;
+            max-width: 200px;
+            display: none;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .photo-preview img {
+            width: 100%;
+            border-radius: 4px;
+            filter: hue-rotate(90deg) brightness(0.8);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 30, 0, 0.9);
+            color: #0f0;
+            border: 2px solid #0f0;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .btn-register::before {
+            content: 'EXECUTE';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 50, 0, 0.9);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-register:hover::before {
+            transform: scaleX(1);
+        }
+
+        .btn-register:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
+        }
+
+        .btn-register:active {
+            transform: scale(0.98);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.9);
+        }
+
+        .error-message {
+            color: #ff3366;
+            font-size: 12px;
+            margin-top: 8px;
+            display: none;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: rgba(0, 30, 0, 0.9);
+            color: #0f0;
+            padding: 15px;
+            border: 1px solid #0f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            animation: matrix-glow 1.5s ease-in-out infinite alternate;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Анимации */
+        @keyframes matrix-glow {
+            from {
+                text-shadow: 0 0 5px rgba(0, 255, 0, 0.5),
+                             0 0 10px rgba(0, 255, 0, 0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(0, 255, 0, 0.9),
+                             0 0 25px rgba(0, 255, 0, 0.7),
+                             0 0 35px rgba(0, 255, 0, 0.5);
+            }
+        }
+
+        @keyframes matrix-text {
+            0%, 100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .matrix-text {
+            animation: matrix-text 1.5s ease-in-out infinite;
+        }
+
+        /* Сканирующая линия */
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.8), transparent);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            animation: scan 8s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* Терминальный эффект печатания */
+        .typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                margin: 20px;
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .form-group::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Цифровой дождь -->
+    <canvas id="matrix-bg"></canvas>
+    <div class="overlay"></div>
+    <div class="scan-line"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="typing">THE MATRIX</h1>
+            <p>SYSTEM ACCESS REGISTRATION</p>
+        </div>
+
+        {% if success %}
+        <div id="successMessage" class="success-message show">
+            ACCESS GRANTED. WELCOME TO THE MATRIX.
+        </div>
+        {% endif %}
+
+        <form id="registrationForm" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="username">USER IDENTIFIER <span class="required">*</span></label>
+                <input type="text" id="username" name="username" value="{{ form_data.username if form_data else '' }}" placeholder="enter username" required>
+                {% if errors and 'username' in errors %}
+                <div class="error-message show" id="usernameError">> ERROR: {{ errors.username }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="password">ACCESS CODE <span class="required">*</span></label>
+                <input type="password" id="password" name="password" placeholder="enter password" required>
+                {% if errors and 'password' in errors %}
+                <div class="error-message show" id="passwordError">> ERROR: {{ errors.password }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="participants_full_names">PARTICIPANT IDENTITIES <span class="required">*</span></label>
+                <textarea id="participants_full_names" name="participants_full_names" rows="3" placeholder="enter full names" required>{{ form_data.participants_full_names if form_data else '' }}</textarea>
+                {% if errors and 'participants_full_names' in errors %}
+                <div class="error-message show" id="participantsError">> ERROR: {{ errors.participants_full_names }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="email">COMMUNICATION NODE <span class="required">*</span></label>
+                <input type="email" id="email" name="email" value="{{ form_data.email if form_data else '' }}" placeholder="enter email address" required>
+                {% if errors and 'email' in errors %}
+                <div class="error-message show" id="emailError">> ERROR: {{ errors.email }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="phone">VOICE CHANNEL</label>
+                <input type="tel" id="phone" name="phone" value="{{ form_data.phone if form_data else '' }}" placeholder="+7 XXX XXX XX XX">
+                {% if errors and 'phone' in errors %}
+                <div class="error-message show" id="phoneError">> ERROR: {{ errors.phone }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="photo">BIOMETRIC SCAN</label>
+                <div class="file-upload">
+                    <input type="file" id="photo" name="photo" accept="image/*">
+                    <div class="file-upload-text" id="fileUploadText">[ INITIATE SCAN ]</div>
+                </div>
+                {% if errors and 'photo' in errors %}
+                <div class="error-message show" id="photoError">> ERROR: {{ errors.photo }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-register">[ ACTIVATE PROTOCOL ]</button>
+        </form>
+    </div>
+
+    <script>
+        // Цифровой дождь
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const matrix = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
+        const characters = matrix.split("");
+
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * canvas.height / fontSize) * -1;
+        }
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#0f0";
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters[Math.floor(Math.random() * characters.length)];
+                const brightness = Math.max(0.3, 1 - (drops[i] * fontSize) / canvas.height);
+                ctx.fillStyle = `rgba(0, 255, 0, ${brightness})`;
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 35);
+
+        // Адаптивность холста
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Терминальный эффект печатания
+        document.addEventListener('DOMContentLoaded', function() {
+            const typingElement = document.querySelector('.typing');
+            const originalText = typingElement.textContent;
+            typingElement.textContent = '';
+            
+            let i = 0;
+            const typeWriter = setInterval(() => {
+                if (i < originalText.length) {
+                    typingElement.textContent += originalText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeWriter);
+                    typingElement.classList.remove('typing');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

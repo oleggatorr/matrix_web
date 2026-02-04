@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование {{ user.username }}</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 6px 8px;
+            background: #001100;
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 60px;
+        }
+        button, .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: transparent;
+            color: #0f0;
+            border: 1px solid #0f0;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        button:hover, .btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>РЕДАКТИРОВАНИЕ: {{ user.username }}</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>ID (только для чтения)</label>
+            <input type="text" value="{{ user.id }}" disabled>
+        </div>
+
+        <div class="form-group">
+            <label>Имя пользователя *</label>
+            <input name="username" value="{{ user.username }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Пароль *</label>
+            <input name="password" value="{{ user.password }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Участники *</label>
+            <textarea name="participants_full_names" required>{{ user.participants_full_names }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Email *</label>
+            <input name="email" type="email" value="{{ user.email }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Телефон</label>
+            <input name="phone" value="{{ user.phone or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label>Фото (оставьте пустым, чтобы не менять)</label>
+            <input type="file" name="photo" accept="image/*">
+            {% if user.photo_path %}
+                <div style="margin-top:8px; max-width:200px;">
+                    <img src="/static/{{ user.photo_path }}" alt="Фото" style="width:100%; border:1px solid #0f0;">
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Время начала (формат: ГГГГ-ММ-ДДЧЧ:ММ)</label>
+            <input name="start_time" value="{{ user.start_time.strftime('%Y-%m-%dT%H:%M') if user.start_time else '' }}" type="datetime-local">
+        </div>
+
+        <div class="form-group">
+            <label>Время окончания</label>
+            <input name="end_time" value="{{ user.end_time.strftime('%Y-%m-%dT%H:%M') if user.end_time else '' }}" type="datetime-local">
+        </div>
+
+        <div class="form-group">
+            <label>Решено задач</label>
+            <input name="solved_tasks" type="number" value="{{ user.solved_tasks or 0 }}">
+        </div>
+
+        <div class="form-group">
+            <label>Текущая задача</label>
+            <input name="active_task" type="number" value="{{ user.active_task or -1 }}">
+        </div>
+
+        <button type="submit">СОХРАНИТЬ</button>
+        <a href="/admin" class="btn">ОТМЕНА</a>
+    </form>
+</body>
+</html>

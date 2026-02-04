@@ -129,9 +129,12 @@ TASKS = {
         "expected": {"selected_id": "0"},
         "error_message": "wrong answer",
         "can_pass":False,
-         "SYMBOLS":[{"image": "/static/images/phone1.png", "message": "Это отдел полиции. Представьтесь и назовите цель вызова.", "id": "0"},
-    {"image": "/static/images/phone2.png", "message": "Здравствуйте! Вы позвонили в службу доставки “Быстрый Бит”. Оставьте сообщение после сигнала.", "id": "0"},
-    {"image": "/static/images/phone3.png", "message": "Внимание: уровень доступа недостаточен. Повторите попытку с авторизацией.", "id": "0"},
+         "SYMBOLS":[
+    {"image": "/static/images/phone1.png", "id": "0"},
+    {"image": "/static/images/phone2.png", "id": "1"},
+    {"image": "/static/images/phone3.png", "id": "2"},
+    {"image": "/static/images/phone3.png", "id": "3"},
+    {"image": "/static/images/phone3.png", "id": "4"},
          ]
     },
 

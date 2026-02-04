@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список пользователей</title>
     <style>
-        /* Сдержанный стиль в духе Матрицы — без анимаций, без фона, только читаемость */
+        /* Стили в духе Матрицы */
         body {
             background-color: #000;
             color: #0f0;
@@ -27,34 +27,53 @@
             margin: 0 auto;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
+        .user-card {
             background: rgba(0, 15, 0, 0.2);
             border: 1px solid #0a3;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            overflow: hidden;
         }
 
-        th, td {
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 1px solid #0a3;
-        }
-
-        th {
-            background: rgba(0, 30, 0, 0.4);
+        .user-header {
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 30, 0, 0.3);
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 1.1rem;
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .user-header:hover {
+            background: rgba(0, 50, 0, 0.4);
         }
 
-        tr:hover {
-            background: rgba(0, 40, 0, 0.3);
+        .user-details {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background: rgba(0, 10, 0, 0.1);
+        }
+
+        .user-details.show {
+            max-height: 500px;
+            padding: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin: 8px 0;
+        }
+
+        .detail-label {
+            width: 200px;
+            font-weight: bold;
+            color: #0c0;
+        }
+
+        .detail-value {
+            flex: 1;
         }
 
         .empty {
@@ -81,11 +100,6 @@
             background: rgba(0, 255, 0, 0.1);
             box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
         }
-
-        
-        body {
-            font-family:  monospace;
-        }
     </style>
 </head>
 <body>
@@ -93,35 +107,88 @@
         <h1>СПИСОК ПОЛЬЗОВАТЕЛЕЙ</h1>
 
         {% if users %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Имя пользователя</th>
-                        <th>Класс/Грейд</th>
-                        <th>Время начала</th>
-                        <th>Время окончания</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.grade or '—' }}</td>
-                        <td>{{ user.start_time.strftime('%Y-%m-%d %H:%M:%S') if user.start_time else '—' }}</td>
-                        <td>{{ user.end_time.strftime('%Y-%m-%d %H:%M:%S') if user.end_time else '—' }}</td>
-                        <td>{{ user.solved_tasks }}</td>
-                        <td>{{ user.active_task }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% for user in users %}
+            <div class="user-card">
+                <div class="user-header" onclick="toggleDetails(this)">
+                    <span>ID: {{ user.id }} | {{ user.username }}</span>
+                    <span>[ + ]</span>
+                </div>
+                <div class="user-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Участники:</div>
+                        <div class="detail-value">{{ user.participants_full_names or '—' }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Email:</div>
+                        <div class="detail-value">{{ user.email or '—' }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Телефон:</div>
+                        <div class="detail-value">{{ user.phone or '—' }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Фото:</div>
+                        <div class="detail-value">
+                            {% if user.photo_path %}
+                                <img src="{{ url_for('static', path='/' + user.photo_path) }}" 
+                                     alt="Фото" style="max-height: 100px; border: 1px solid #0f0;">
+                            {% else %}
+                                —
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Время начала:</div>
+                        <div class="detail-value">
+                            {{ user.start_time.strftime('%Y-%m-%d %H:%M:%S') if user.start_time else '—' }}
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Время окончания:</div>
+                        <div class="detail-value">
+                            {{ user.end_time.strftime('%Y-%m-%d %H:%M:%S') if user.end_time else '—' }}
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Решено задач:</div>
+                        <div class="detail-value">{{ user.solved_tasks or 0 }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Текущая задача:</div>
+                        <div class="detail-value">{{ user.active_task or '—' }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         {% else %}
             <p class="empty">Пользователи не найдены.</p>
         {% endif %}
 
         <a href="/" class="back-link">← Назад на главную</a>
     </div>
+
+    <script>
+        function toggleDetails(header) {
+            const details = header.nextElementSibling;
+            const isOpen = details.classList.contains('show');
+            
+            // Скрыть все другие открытые блоки
+            document.querySelectorAll('.user-details.show').forEach(el => {
+                if (el !== details) {
+                    el.classList.remove('show');
+                    el.previousElementSibling.querySelector('span:last-child').textContent = '[ + ]';
+                }
+            });
+
+            // Переключить текущий
+            if (isOpen) {
+                details.classList.remove('show');
+                header.querySelector('span:last-child').textContent = '[ + ]';
+            } else {
+                details.classList.add('show');
+                header.querySelector('span:last-child').textContent = '[ – ]';
+            }
+        }
+    </script>
 </body>
 </html>

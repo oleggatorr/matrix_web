@@ -2,21 +2,41 @@
 
 {% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Вход</title>
-    <!-- style>
-        
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
-        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background: #0056b3; }
-    </style -->>
-</head>
-<body>
 {% block content %}
+<style>
+.logout-btn {
+
+    background: transparent;
+    color: #f00; /* Красный — как "опасность" в Матрице */
+    border: 1px solid #f00;
+    padding: 8px 20px;
+    font-family: 'MyCustomFont2', 'Verdana', sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.logout-btn2 {
+
+    background: transparent;
+    color: #ff0; /* Красный — как "опасность" в Матрице */
+    border: 1px solid #0f0;
+    padding: 8px 20px;
+    font-family: 'MyCustomFont2', 'Verdana', sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.matrix-footer {
+    background: rgba(0, 10, 0, 0.6);
+    
+    border-top: 1px solid #0f0;
+    padding: 12px 20px;
+    text-align: right;
+}
+</style>
 <div class="matrix-form">
     <h2>ВОЙДИТЕ В СИСТЕМУ</h2>
     <br>
@@ -26,17 +46,22 @@
             <input type="text" id="username" name="username" class="matrix-input" required>
         </div>
         <div>
-            <label for="grade">КЛАСС:</label>
-            <input type="text" id="grade" name="grade" class="matrix-input" required>
+            <label for="password">Пароль:</label>
+            <input type="text" id="password" name="password" class="matrix-input" required>
         </div>
         <button type="submit" class="matrix-btn">ВОЙТИ</button>
     </form>
+    <br><br>
+    <a href="/register" class="matrix-btn logout-btn2" >РЕГИСТРАЦИЯ</a>
+    <br><br>
 </div>
+
+{% if error %}
+    <div class="error-message">Неверный логин\пароль</div>
+{% endif %}
 {% endblock %}
 
 {% block footbutton %}
     
     <a href="/list" class="matrix-btn logout-btn">Список участников</a>
 {% endblock %}
-
-</body>>

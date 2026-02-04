@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админка — Список</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid #0a3;
+        }
+        th {
+            background: rgba(0, 30, 0, 0.4);
+        }
+        a {
+            color: #0f0;
+            text-decoration: none;
+            padding: 4px 8px;
+            border: 1px solid #0f0;
+            font-size: 0.9em;
+        }
+        a:hover {
+            background: rgba(0, 255, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>СПИСОК ПОЛЬЗОВАТЕЛЕЙ</h1>
+
+    {% if users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя</th>
+                    <th>Участники</th>
+                    <th>Email</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.participants_full_names[:40] }}{% if u.participants_full_names|length > 40 %}...{% endif %}</td>
+                    <td>{{ u.email }}</td>
+                    <td><a href="/admin/edit/{{ u.id }}">РЕДАКТИРОВАТЬ</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Нет данных.</p>
+    {% endif %}
+
+    <a href="/">← Назад</a>
+</body>
+</html>

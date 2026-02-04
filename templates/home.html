@@ -18,6 +18,11 @@
     <button type="submit" class="matrix-btn">Войти в Матрицу</button>
     </form>
 
+
+    {% if admin %}
+    <br>
+    <a href="/admin" class="matrix-btn logout-btn">Админка</a>
+    {% endif %}
     <!-- Опционально: кнопка выхода -->
     {% endblock %}
 </body>
