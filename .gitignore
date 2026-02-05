@@ -21,3 +21,8 @@ __pycache__/
 
 # Логи и прочее
 *.log
+
+
+# Database
+users.db
+*.db
