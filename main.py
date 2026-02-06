@@ -233,69 +233,72 @@ async def task_page(
         "error": None
     }
     update_user_progress(db, user, task_id)
-    match task_id:
-        case 1:
-            context = {**base_context}
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 2:
-            context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS"), "correct_symbol_id": "0"}
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 3:
+    context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS",None),
+                       "correct_symbol_id": TASKS.get(task_id).get("correct_symbol_id","0")}
+    
+    if task_id:
+        if task_id == 1:
             
-            context = {**base_context, "symbols": SYMBOLS}
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 4:
+        elif task_id == 2:
+            
+            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+        elif task_id == 3:
+            
+            
+            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+        elif task_id == 4:
 
-            context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS")}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 5:
+        elif task_id == 5:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 6:
+        elif task_id == 6:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 7:
+        elif task_id == 7:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 8:
+        elif task_id == 8:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 9:
+        elif task_id == 9:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 10:
+        elif task_id == 10:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 11:
+        elif task_id == 11:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 12:
-            context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS"), "correct_symbol_id": "0"}
+        elif task_id == 12:
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 13:
+        elif task_id == 13:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 14:
+        elif task_id == 14:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 15:
+        elif task_id == 15:
 
-            context = {**base_context, "symbols": SYMBOLS}
+           
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case 16:
+        elif task_id == 16:
 
-            context = {**base_context, "symbols": SYMBOLS}
+            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
-        case _:
+        else:
             raise HTTPException(status_code=404)
 
 
@@ -381,10 +384,10 @@ async def task_submit(
         }
 
         # Добавляем специфичные данные (если нужно)
-        if task_id in {2,4, 12}:
+        if TASKS.get(task_id).get("SYMBOLS", None) != None:
             base_context.update({
-                "symbols": TASKS.get(task_id).get("SYMBOLS"),
-                "correct_symbol_id": "0"  # или из конфига
+                "symbols" : TASKS.get(task_id).get("SYMBOLS"),
+                "correct_symbol_id" : TASKS.get(task_id).get("correct_symbol_id", 0)# или из конфига
             })
         elif task_id == 3:
             base_context["symbols"] = SYMBOLS
@@ -520,6 +523,7 @@ async def admin_edit_form(
 # Обработка редактирования
 @app.post("/admin/edit/{user_id}", response_class=HTMLResponse)
 async def admin_edit_submit(
+
     request: Request,
     user_id: int,
     username: str = Form(...),
@@ -566,3 +570,16 @@ async def admin_edit_submit(
     db.refresh(user)
 
     return RedirectResponse(url="/admin", status_code=303)
+
+
+
+# Тестовая страница (можно удалить в продакшене)
+@app.get("/test", response_class=HTMLResponse)
+async def get_register_page(request: Request):
+    """Отображение страницы регистрации"""
+    return templates.TemplateResponse(
+        "base.html",
+        {
+            "request": request,
+        }
+    )

@@ -28,8 +28,10 @@ TASKS = {
     {"image": "/static/images/phone2.png", "message": "Сообщение 1", "id": "1"},
     {"image": "/static/images/phone3.png", "message": "Сообщение 1", "id": "1"},
     {"image": "/static/images/phone1.png", "message": "Сообщение 1", "id": "1"},
-    {"image": "/static/images/phone2.png", "message": "Сообщение 1", "id": "1"}]
+    {"image": "/static/images/phone2.png", "message": "Сообщение 1", "id": "1"}],
+    "correct_symbol_id": "0"
     },
+    
 
 
     3: {
@@ -64,6 +66,7 @@ TASKS = {
     {"image": "/static/images/phone1.png", "message": "Связь установлена. Передаю данные… Данные зашифрованы. Ключ утерян.", "id": "1"},
     {"image": "/static/images/phone2.png", "message": "Это не телефон. Это портал. Но сегодня он сломан. Звоните завтра.", "id": "1"},
     ],
+    "correct_symbol_id": "0"
     },
     5: {
         "title": "Задание 5",

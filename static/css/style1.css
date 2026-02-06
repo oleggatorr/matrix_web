@@ -3,13 +3,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: #000;
+    background: #0000005e;
     
 }
 
 body {
     
-    background: #000;
+    background: #00000000;
     color: #20ff20; /* Неоново-зелёный */
     font-family: 'MyCustomFont1', 'Verdana', sans-serif;
     overflow: hidden;
