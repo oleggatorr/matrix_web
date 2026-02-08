@@ -15,3 +15,7 @@ http://127.0.0.1:8000/redoc
 
 Загрузить с мейна
 git pull origin main
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5171eb9 (Удалён GitHub PAT из readme)
