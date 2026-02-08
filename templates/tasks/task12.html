@@ -3,36 +3,437 @@
 {% block title %}Задание 12{% endblock %}
 
 {% block content %}
-<h1>Правая или левая...</h1>
-<p class="instruction">И снова мы там откуда всё началось</p>
-<p>
-И снова ты стоишь на пороге.
-Перед тобой — два пути.
-</p>
-<br>
-<p>
-Система сгенерировала цветовой ключ.
-Чтобы понять, какую таблетку принять, реши уравнения:<br>
-<p>R: 3(R – 12) = 144</p>
-<p>G: G² = 64</p>
-<p>B: 2B + 18 = 150</p>
-</p>
+<h1 class="matrix-title">ПРАВАЯ ИЛИ ЛЕВАЯ...</h1>
+<p class="matrix-instruction">И снова мы там, откуда всё началось</p>
 
+<p class="matrix-text">
+И снова ты стоишь на пороге.<br>
+Перед тобой — два пути... или шесть?
+</p>
+        <div class="equation-block">
+    <div class="equation-item">
+        <span class="eq-label">R:</span>
+        <span class="eq-formula">log₂(x - 28) = 7</span>
+    </div>
+    <div class="equation-item">
+        <span class="eq-label">G:</span>
+        <span class="eq-formula">x² - 16x - 105 = 0</span>
+    </div>
+    <div class="equation-item">
+        <span class="eq-label">B:</span>
+        <span class="eq-formula">(x-125)² = 10000</span>
+    </div>
+</div>
+        
+
+<!--
+
+-->
+<div class="pills-grid">
+    <!-- Красная таблетка -->
+    <form method="post">
+        <button type="submit" name="index" value="1" class="matrix-pill pill-red">
+            <span class="pill-inner">КРАСНАЯ</span>
+        </button>
+    </form>
+
+    <!-- Синяя таблетка -->
+    <form method="post">
+        <button type="submit" name="index" value="2" class="matrix-pill pill-blue">
+            <span class="pill-inner">СИНЯЯ</span>
+        </button>
+    </form>
+
+    <!-- Фиолетовая таблетка -->
+    <form method="post">
+        <button type="submit" name="index" value="3" class="matrix-pill pill-violet">
+            <span class="pill-inner">ФИОЛЕТОВАЯ</span>
+        </button>
+    </form>
+
+    <!-- Зелёная таблетка -->
+    <form method="post">
+        <button type="submit" name="index" value="4" class="matrix-pill pill-green">
+            <span class="pill-inner">ЗЕЛЁНАЯ</span>
+        </button>
+    </form>
+
+    <!-- Жёлтая таблетка -->
+    <form method="post">
+        <button type="submit" name="index" value="5" class="matrix-pill pill-yellow">
+            <span class="pill-inner">ЖЁЛТАЯ</span>
+        </button>
+    </form>
+
+    <!-- Чёрная таблетка -->
+    <form method="post">
+        <button type="submit" name="index" value="6" class="matrix-pill pill-black">
+            <span class="pill-inner">ЧЁРНАЯ</span>
+        </button>
+    </form>
+</div>
 {% if error %}
     <div class="error-message">{{ error }}</div>
 {% endif %}
-
-<div class="symbols-container">
-    {% for symbol in symbols %}
-        <form method="post" style="display: inline-block; margin: 10px;">
-            <button type="submit" name="selected_id" value="{{ symbol.id }}" class="matrix-symbol-btn">
-                <img src="{{ symbol.image }}" alt="Символ">
-            </button>
-        </form>
-    {% endfor %}
-</div>
 {% endblock %}
 
 {% block script %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
 
+:root {
+    --matrix-green: #0f0;
+    --matrix-bright: #0f6;
+    --matrix-dark: #020;
+    --matrix-darker: #000;
+    --matrix-red: #ff3333;
+    --matrix-blue: #3366ff;
+    --matrix-violet: #5b2c6f;
+}
+
+/* Стили текста */
+.matrix-title {
+    text-align: center;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    margin: 2rem 0;
+    color: var(--matrix-green);
+    text-shadow: 0 0 10px var(--matrix-green), 0 0 20px var(--matrix-green);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: bold;
+}
+
+.matrix-instruction {
+    text-align: center;
+    font-style: italic;
+    color: var(--matrix-bright);
+    margin-bottom: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.matrix-text {
+    text-align: center;
+    line-height: 1.6;
+    margin: 1rem 0;
+    color: var(--matrix-green);
+    font-family: 'IBM Plex Mono', monospace;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Терминал с уравнениями */
+.equations-terminal {
+    max-width: 700px;
+    margin: 2rem auto;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.terminal-header {
+    background-color: #222;
+    padding: 10px 15px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid var(--matrix-green);
+}
+
+.terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.red-dot { background-color: #ff5f56; }
+.yellow-dot { background-color: #ffbd2e; }
+.green-dot { background-color: #27c93f; }
+
+.terminal-title {
+    color: var(--matrix-green);
+    font-size: 0.9rem;
+    margin-left: 10px;
+    opacity: 0.8;
+}
+
+.terminal-body {
+    background-color: rgba(0, 15, 0, 0.92);
+    padding: 20px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border: 1px solid var(--matrix-green);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+.terminal-line {
+    margin-bottom: 8px;
+    color: var(--matrix-green);
+    font-size: 0.95rem;
+}
+
+.prompt {
+    color: var(--matrix-bright);
+    margin-right: 10px;
+}
+
+.command {
+    opacity: 0.9;
+}
+
+.result-line .command {
+    color: var(--matrix-bright);
+    font-weight: bold;
+}
+
+.result-key {
+    color: var(--matrix-green);
+}
+
+.result-value {
+    color: #ffcc00;
+    margin-left: 5px;
+}
+
+.equation-block {
+    background-color: rgba(0, 30, 0, 0.7);
+    padding: 15px;
+    margin: 15px 0;
+    border-left: 3px solid var(--matrix-green);
+    border-radius: 4px;
+}
+
+.equation-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 8px;
+    background-color: rgba(0, 40, 0, 0.5);
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.equation-item:hover {
+    background-color: rgba(0, 60, 0, 0.7);
+}
+
+.eq-label {
+    font-weight: bold;
+    width: 30px;
+    color: var(--matrix-bright);
+    font-size: 1.2rem;
+}
+
+.eq-formula {
+    flex: 1;
+    color: var(--matrix-green);
+    font-size: 1.1rem;
+}
+
+.eq-solution {
+    color: #ffcc00;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+/* Сетка кнопок */
+.pills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 10px;
+}
+
+.matrix-pill {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    border: none;
+    border-radius: 50px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: bold;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    padding: 0;
+    text-transform: uppercase;
+}
+
+.matrix-pill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+    z-index: 1;
+}
+
+.matrix-pill::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+}
+
+.matrix-pill:hover::after {
+    opacity: 1;
+}
+
+.matrix-pill:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+}
+
+.matrix-pill:active {
+    transform: translateY(2px) scale(0.98);
+}
+
+.pill-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    z-index: 3;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Цветовые стили кнопок */
+.pill-red {
+    background: linear-gradient(135deg, #ff3333 0%, #cc0000 100%);
+}
+.pill-red .pill-inner { color: white; }
+.pill-red:hover {
+    box-shadow: 0 0 20px rgba(255, 51, 51, 0.8),
+                0 0 30px rgba(255, 0, 0, 0.5);
+}
+
+.pill-blue {
+    background: linear-gradient(135deg, #3366ff 0%, #0033cc 100%);
+}
+.pill-blue .pill-inner { color: white; }
+.pill-blue:hover {
+    box-shadow: 0 0 20px rgba(51, 102, 255, 0.8),
+                0 0 30px rgba(0, 51, 204, 0.5);
+}
+
+.pill-violet {
+    background: linear-gradient(135deg, #5b2c6f 0%, #3c0842 100%);
+}
+.pill-violet .pill-inner { color: #e8daef; }
+.pill-violet:hover {
+    box-shadow: 0 0 20px rgba(91, 44, 111, 0.8),
+                0 0 30px rgba(60, 8, 66, 0.6);
+}
+
+.pill-green {
+    background: linear-gradient(135deg, #33cc33 0%, #009900 100%);
+}
+.pill-green .pill-inner { color: white; }
+.pill-green:hover {
+    box-shadow: 0 0 20px rgba(51, 204, 51, 0.8),
+                0 0 30px rgba(0, 153, 0, 0.5);
+}
+
+.pill-yellow {
+    background: linear-gradient(135deg, #ffcc00 0%, #cc9900 100%);
+}
+.pill-yellow .pill-inner { color: #333; }
+.pill-yellow:hover {
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8),
+                0 0 30px rgba(204, 153, 0, 0.5);
+}
+
+.pill-black {
+    background: linear-gradient(135deg, #333 0%, #111 100%);
+}
+.pill-black .pill-inner { color: #ccc; }
+.pill-black:hover {
+    box-shadow: 0 0 20px rgba(51, 51, 51, 0.8),
+                0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Анимация появления */
+@keyframes pillAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pills-grid form:nth-child(1) { animation: pillAppear 0.4s ease-out 0.1s forwards; opacity: 0; }
+.pills-grid form:nth-child(2) { animation: pillAppear 0.4s ease-out 0.2s forwards; opacity: 0; }
+.pills-grid form:nth-child(3) { animation: pillAppear 0.4s ease-out 0.3s forwards; opacity: 0; }
+.pills-grid form:nth-child(4) { animation: pillAppear 0.4s ease-out 0.4s forwards; opacity: 0; }
+.pills-grid form:nth-child(5) { animation: pillAppear 0.4s ease-out 0.5s forwards; opacity: 0; }
+.pills-grid form:nth-child(6) { animation: pillAppear 0.4s ease-out 0.6s forwards; opacity: 0; }
+
+/* Сообщение об ошибке */
+.error-message {
+    background-color: rgba(40, 5, 5, 0.9);
+    border: 1px solid #ff3333;
+    color: #ff6666;
+    padding: 12px 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .pills-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .matrix-pill {
+        height: 70px;
+        font-size: 0.85rem;
+    }
+    .matrix-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pills-grid {
+        grid-template-columns: 1fr;
+    }
+    .matrix-pill {
+        height: 60px;
+        font-size: 1rem;
+        border-radius: 40px;
+    }
+    .equations-terminal {
+        margin: 1rem;
+    }
+    .terminal-body {
+        padding: 15px;
+    }
+    .matrix-title {
+        font-size: 1.5rem;
+    }
+}
+</style>
 {% endblock %}

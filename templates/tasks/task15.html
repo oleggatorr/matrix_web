@@ -4,8 +4,17 @@
 
 {% block content %}
 <h1>По следам</h1>
-<p class="instruction">Текст.</p>
-
+<p class="instruction">Нам удалось найти клавиатуру одного из архитекторов Матрицы.
+На ней — свежие отпечатки пальцев. Только эти клавиши использовались при вводе главного пароля.</p>
+<h3>Из разведданных известно:</h3>
+<br>
+<h3>
+<ol class="rules">
+    <li>Пароль начинается с <strong>имени создателя</strong> латинскими строчными буквами</li>
+    <li>После имени идёт <strong>один спецсимвол</strong></li>
+    <li>В конце — <strong>цифры по возрастанию</strong></li>
+</ol>
+</h3>
 <img src="/static/images/key_bord.png" alt="Изображение задания" 
      width="800" 
      height="200"
@@ -29,7 +38,7 @@
             value="{{ code or '' }}"
         >
     </div>
-    <button type="submit" class="matrix-btn">Текст</button>
+    <button type="submit" class="matrix-btn">Отправить</button>
 </form>
 {% endblock %}
 

@@ -5,29 +5,30 @@
 {% block content %}
 <h1>Кто есть кто?</h1>
 
-<p class="instruction">
+<h2>
     В заброшенном секторе Матрицы активировались три терминала связи.  
     За каждым из них находится либо <strong>человек</strong>,  
-    либо <strong>Агент</strong> 
-</p>
-
-<p class="instruction">
+    либо <strong>Агент</strong>.  
+    <strong>Известно, что <strong>человек</strong> — ровно один</strong>,<br> остальные — <strong>Агенты</strong>.
+</h2>
+<br>
+<h3>
     Каждый терминал передал два сообщения о распределении ролей:
-</p>
-
+<h3>
+<br>
 <div class="terminals">
     <div class="terminal alpha">
         <h3>Терминал Альфа:</h3>
         <ul>
             <li>«Я — человек».</li>
-            <li>«Терминал Бета — Агент».</li>
+            <li>«Терминал Гамма — не Человек.»</li>
         </ul>
     </div>
 
     <div class="terminal beta">
         <h3>Терминал Бета:</h3>
         <ul>
-            <li>«Я — не Агент».</li>
+            <li>«Терминал Альфа — Человек».</li>
             <li>«Терминал Гамма — Агент».</li>
         </ul>
     </div>
@@ -35,26 +36,26 @@
     <div class="terminal gamma">
         <h3>Терминал Гамма:</h3>
         <ul>
-            <li>«Я — не Агент».</li>
-            <li>«Терминал Альфа — человек».</li>
+            <li>«Терминал Бета — Агент».</li>
+            <li>«Терминал Альфа — Агент».</li>
         </ul>
     </div>
 </div>
 
-<p class="instruction">
-    <strong>Известно:</strong> каждый терминал передал <em>ровно одно истинное утверждение и одну ложь</em>  
-</p>
+   <h3> <strong>Известно:</strong> каждый терминал передал <em>ровно одно истинное утверждение и одну ложь</em>. 
 
-<p class="instruction">
-    <strong>Вопрос:</strong> Кто есть кто? Определите, за какими терминалами скрываются люди, а за какими — Агенты.
-</p>
+<br><br>
+<h3>
+    <strong>Вопрос:</strong> Кто есть кто? Определите, за каким терминалом скрывается единственный человек, а за какими — Агенты.
+</h3>
+<br>
 
-<p class="instruction">
-    <em>Формат ответа:</em> укажите последовательность из трёх букв без пробелов:  
-    H — человек, A — Агент.  
+    <em>Формат ответа:</em> укажите последовательность из трёх латинских букв без пробелов:  
+    H — человек, A — Агент.  <br>
     Порядок: Альфа, Бета, Гамма.  
-</p>
+    <br><br>
 
+</h3>
 <!-- Сообщение об ошибке -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
@@ -63,7 +64,7 @@
 <!-- Форма ввода кода -->
 <form method="post">
     <div class="input-group">
-        <label for="code">Ваш ответ (пример: AHA):</label>
+        <label for="code">Ответ:</label>
         <input 
             type="text"     
             id="code" 
@@ -71,7 +72,7 @@
             class="matrix-input" 
             required 
             value="{{ code or '' }}"
-            placeholder="AHA"
+            placeholder="HAA"
             maxlength="3"
         >
     </div>
@@ -81,13 +82,11 @@
 
 {% block script %}
 <style>
-
-
 .terminals {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    margin: 20px 0;
+    margin: 0px 10px 10px 10px ;
 }
 .terminal {
     background: #0a0a0a;

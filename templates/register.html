@@ -374,7 +374,7 @@
 
         <form id="registrationForm" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="username">USER IDENTIFIER <span class="required">*</span></label>
+                <label for="username">НАЗВАНИЕ КОМАНДЫ <span class="required">*</span></label>
                 <input type="text" id="username" name="username" value="{{ form_data.username if form_data else '' }}" placeholder="enter username" required>
                 {% if errors and 'username' in errors %}
                 <div class="error-message show" id="usernameError">> ERROR: {{ errors.username }}</div>
@@ -382,7 +382,7 @@
             </div>
 
             <div class="form-group">
-                <label for="password">ACCESS CODE <span class="required">*</span></label>
+                <label for="password">ПАРОЛЬ <span class="required">*</span></label>
                 <input type="password" id="password" name="password" placeholder="enter password" required>
                 {% if errors and 'password' in errors %}
                 <div class="error-message show" id="passwordError">> ERROR: {{ errors.password }}</div>
@@ -390,7 +390,7 @@
             </div>
 
             <div class="form-group">
-                <label for="participants_full_names">PARTICIPANT IDENTITIES <span class="required">*</span></label>
+                <label for="participants_full_names">ЧЛЕНЫ КОМАНДЫ <span class="required">*</span></label>
                 <textarea id="participants_full_names" name="participants_full_names" rows="3" placeholder="enter full names" required>{{ form_data.participants_full_names if form_data else '' }}</textarea>
                 {% if errors and 'participants_full_names' in errors %}
                 <div class="error-message show" id="participantsError">> ERROR: {{ errors.participants_full_names }}</div>
@@ -398,7 +398,7 @@
             </div>
 
             <div class="form-group">
-                <label for="email">COMMUNICATION NODE <span class="required">*</span></label>
+                <label for="email">ЭЛЕКТРОННАЯ ПОЧТА <span class="required">*</span></label>
                 <input type="email" id="email" name="email" value="{{ form_data.email if form_data else '' }}" placeholder="enter email address" required>
                 {% if errors and 'email' in errors %}
                 <div class="error-message show" id="emailError">> ERROR: {{ errors.email }}</div>
@@ -406,7 +406,7 @@
             </div>
 
             <div class="form-group">
-                <label for="phone">VOICE CHANNEL</label>
+                <label for="phone">ТЕЛЕФОН</label>
                 <input type="tel" id="phone" name="phone" value="{{ form_data.phone if form_data else '' }}" placeholder="+7 XXX XXX XX XX">
                 {% if errors and 'phone' in errors %}
                 <div class="error-message show" id="phoneError">> ERROR: {{ errors.phone }}</div>
@@ -414,13 +414,17 @@
             </div>
 
             <div class="form-group">
-                <label for="photo">BIOMETRIC SCAN</label>
+                <label for="photo">ФОТО КОМАНДЫ</label>
                 <div class="file-upload">
                     <input type="file" id="photo" name="photo" accept="image/*">
-                    <div class="file-upload-text" id="fileUploadText">[ INITIATE SCAN ]</div>
+                    <div class="file-upload-text" id="fileUploadText">[ ADD PHOTO ]</div>
+                </div>
+                <!-- Превью фото -->
+                <div class="photo-preview" id="photoPreview">
+                    <img id="previewImage" src="" alt="Preview">
                 </div>
                 {% if errors and 'photo' in errors %}
-                <div class="error-message show" id="photoError">> ERROR: {{ errors.photo }}</div>
+                    <div class="error-message show" id="photoError">> ERROR: {{ errors.photo }}</div>
                 {% endif %}
             </div>
 
@@ -493,6 +497,29 @@
                 }
             }, 100);
         });
+
+
+        document.getElementById('photo').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('photoPreview');
+    const previewImage = document.getElementById('previewImage');
+    const fileUploadText = document.getElementById('fileUploadText');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            preview.style.display = 'block'; // Показываем превью
+            fileUploadText.textContent = '[ PHOTO ADDED ✓ ]';
+            fileUploadText.style.color = '#0f0';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+        fileUploadText.textContent = '[ ADD PHOTO ]';
+    }
+    });
+
     </script>
 </body>
 </html>

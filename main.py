@@ -46,9 +46,11 @@ def get_db():
 def update_user_task(db: Session, user: User, task_id: int, done: bool):
     """Обновляет прогресс пользователя после попытки решить задачу."""
     ts = TaskStemps(user.solved_tasks)
-    print(user.solved_tasks)
+
+    ts.set_task(task_id,done)
     user.solved_tasks = ts.value
     db.commit()  # user уже отслеживается сессией
+
 
 def update_user_progress(db: Session, user: User, task_id: int):
     user.active_task = task_id
@@ -222,7 +224,6 @@ async def task_page(
     if task_id > max(TASKS.keys()):
         return RedirectResponse(url=f"/finish?pass_code={FINISH_CODE}")
 
-    print_user(user)
 
     # Рендер шаблонов
     base_context = {
@@ -283,20 +284,19 @@ async def task_page(
             
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         elif task_id == 13:
-
             
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         elif task_id == 14:
-
             
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         elif task_id == 15:
-
            
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         elif task_id == 16:
 
-            
+            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+        elif task_id == 17:
+
             return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
         else:
             raise HTTPException(status_code=404)
@@ -322,11 +322,14 @@ async def task_submit(
         raise HTTPException(status_code=404, detail="Задание не найдено")
 
     # Анализируем форму
+    
     form_data = await request.form()
     answers = {k: v.strip().upper() for k, v in form_data.items()}
+    
 
     # Определяем успех
     input_fields = task_config.get("input_fields", [])
+    print(answers)
     if not input_fields:
         success = True  # Пустая форма = успех
     else:
@@ -513,11 +516,13 @@ async def admin_edit_form(
 ):
     require_admin(request, db)
     user = db.query(User).filter(User.id == user_id).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="Пользователь не найден")
     return templates.TemplateResponse("admin/edit.html", {
         "request": request,
-        "user": user
+        "user": user,
+        "solved_tasks": int(bin(user.solved_tasks)[2:][::-1])
     })
 
 # Обработка редактирования

@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Задание 1{% endblock %}
+{% block title %}Задание 2{% endblock %}
 
 {% block content %}
-<h1>Нахождение пути в графе</h1>
-<p class="instruction">Текст.</p>
+<h1>Tебе Tоже Lень?</h1>
+<p class="instruction">Ты подключился к корневому серверу A.
+Перед тобой — карта внутренней сети Матрицы: узлы, каналы, задержки.
+Каждое соединение имеет свою «стоимость» — время передачи сигнала.</p>
+Найди сервер, наиболее удалённый от A, то есть такой,
+для которого кратчайший путь от A до него — самый длинный среди всех.
+Введи путь до этого сервера.
+<br><br>
+<div class="matrix-container">
+    <div class="matrix-graph">
+        <img src="/static/images/graph.png" alt="Схема дорог между пунктами" 
+             class="matrix-graph-image">
+    </div>
+</div>
 
-
-
-<img src="/static/images/graph.png" alt="Изображение задания" 
-     width="800" 
-     height="200"
-     class="matrix-image">
-<!-- Сообщение об ошибке -->
 <!-- Сообщение об ошибке -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
@@ -29,12 +34,33 @@
             class="matrix-input" 
             required 
             value="{{ code or '' }}"
+            placeholder="Пример: ABCDE"
         >
     </div>
-    <button type="submit" class="matrix-btn">ВОЙТИ</button>
+    <button type="submit" class="matrix-btn">ПРОВЕРИТЬ</button>
 </form>
 {% endblock %}
 
 {% block script %}
-
+<script>
+    // Дополнительная логика для матричного стиля
+    document.addEventListener('DOMContentLoaded', function() {
+        const graphImage = document.querySelector('.matrix-graph-image');
+        graphImage.style.maxWidth = '100%';
+        graphImage.style.border = '1px solid #ccc';
+        graphImage.style.borderRadius = '4px';
+        
+        // Анимация при наведении на узлы
+        document.querySelectorAll('.matrix-node').forEach(node => {
+            node.addEventListener('mouseover', function() {
+                this.style.backgroundColor = '#e0f7fa';
+                this.style.transform = 'scale(1.1)';
+            });
+            node.addEventListener('mouseout', function() {
+                this.style.backgroundColor = '';
+                this.style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
 {% endblock %}

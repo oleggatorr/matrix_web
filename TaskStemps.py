@@ -7,16 +7,18 @@ class TaskStemps:
         self._value = initial_value
 
     def set_task(self, index: int, solved: bool):
-        print(bin(self._value))
+
+        index -= 1
         if index < 0:
             raise IndexError("Index must be non-negative.")
         if solved:
             self._value |= (1 << index)
         else:
             self._value &= ~(1 << index)
-        print(bin(self._value))
+
 
     def get_task(self, index: int) -> bool:
+        index -= 1
         if index < 0:
             raise IndexError("Index must be non-negative.")
         return bool(self._value & (1 << index))
