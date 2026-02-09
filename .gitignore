@@ -26,3 +26,5 @@ __pycache__/
 # Database
 users.db
 *.db
+
+static/uploads/
