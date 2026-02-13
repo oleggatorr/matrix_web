@@ -131,7 +131,7 @@ async def start_session(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     
     return RedirectResponse(
-        url = f"/tasks/{TASKS.get(1).get("file")}?{TASKS.get(1).get("key")}",
+        url = f"/tasks/{TASKS.get(1).get('file')}?{TASKS.get(1).get('key')}",
         status_code=303
     )
 
@@ -236,7 +236,7 @@ async def task_page(
     update_user_progress(db, user, task_id)
     context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS",None),
                        "correct_symbol_id": TASKS.get(task_id).get("correct_symbol_id","0")}
-    filename =f"tasks/{TASKS.get(task_id).get("file")}"
+    filename =f"tasks/{TASKS.get(task_id).get('file')}"
     print(filename)
     if task_id: 
         if task_id == 1:
@@ -397,7 +397,7 @@ async def task_submit(
             base_context["symbols"] = SYMBOLS
         
         return templates.TemplateResponse(
-            f"/tasks/{TASKS.get(1).get("file")}?{TASKS.get(1).get("key")}",
+            f"/tasks/{TASKS.get(1).get('file')}?{TASKS.get(1).get('key')}",
             base_context
         )
 
