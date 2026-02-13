@@ -131,7 +131,7 @@ async def start_session(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     
     return RedirectResponse(
-        url=f"/tasks/1?pass_code={first_pass_code}",
+        url = f"/tasks/{TASKS.get(1).get("file")}?{TASKS.get(1).get("key")}",
         status_code=303
     )
 
@@ -236,68 +236,69 @@ async def task_page(
     update_user_progress(db, user, task_id)
     context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS",None),
                        "correct_symbol_id": TASKS.get(task_id).get("correct_symbol_id","0")}
-    
-    if task_id:
+    filename =f"tasks/{TASKS.get(task_id).get("file")}"
+    print(filename)
+    if task_id: 
         if task_id == 1:
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 2:
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 3:
             
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 4:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 5:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 6:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 7:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 8:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 9:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 10:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 11:
 
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 12:
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 13:
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 14:
             
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 15:
            
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 16:
 
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         elif task_id == 17:
 
-            return templates.TemplateResponse(f"tasks/task{task_id}.html", context)
+            return templates.TemplateResponse(filename, context)
         else:
             raise HTTPException(status_code=404)
 
@@ -394,9 +395,9 @@ async def task_submit(
             })
         elif task_id == 3:
             base_context["symbols"] = SYMBOLS
-
+        
         return templates.TemplateResponse(
-            f"tasks/task{task_id}.html",
+            f"/tasks/{TASKS.get(1).get("file")}?{TASKS.get(1).get("key")}",
             base_context
         )
 
@@ -576,7 +577,30 @@ async def admin_edit_submit(
 
     return RedirectResponse(url="/admin", status_code=303)
 
+@app.post("/admin/delete/{user_id}")
+async def admin_delete_user(
+    request: Request,
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    require_admin(request, db)
+    
+    if str(user_id) == request.cookies.get("user_id"):
+        raise HTTPException(status_code=400, detail="Нельзя удалить самого себя")
 
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404)
+
+    # 🔸 Удаляем файл фото, если он есть
+    if user.photo_path:
+        photo_full_path = Path("static") / user.photo_path
+        if photo_full_path.exists():
+            photo_full_path.unlink()  # удаляет файл
+
+    db.delete(user)
+    db.commit()
+    return RedirectResponse(url="/admin", status_code=303)
 
 # Тестовая страница (можно удалить в продакшене)
 @app.get("/test", response_class=HTMLResponse)

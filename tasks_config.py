@@ -1,6 +1,7 @@
 # tasks_config.py
 TASKS = {
     1: {
+        "file": "task1.html",
         "title": "Задание 1",
         "key": 12345,
         "input_fields": ["code"],  # одно поле с именем "code"
@@ -10,6 +11,7 @@ TASKS = {
 
     },
     2: {
+    "file": "task2.html",
     "input_fields": ["selected_id"],
     "expected": {"selected_id": "0"},
     "error_message": "Тревога! Высока опасность обнаружения.",
@@ -40,6 +42,7 @@ TASKS = {
 
 
     3: {
+        "file": "task3.html",
         "title": "Задание 3",
         "key": 12345,
         "input_fields": [],  
@@ -48,6 +51,7 @@ TASKS = {
         "can_pass":False,
     },
     4: {
+        "file": "task4.html",
         "title": "Задание 4",
         "key": 12345,
         "input_fields": ["code"],  
@@ -74,6 +78,7 @@ TASKS = {
     "correct_symbol_id": "0"
     },
     5: {
+        "file": "task5.html",
         "title": "Задание 5",
         "key": 12345,
         "input_fields": ["code"],  
@@ -82,6 +87,7 @@ TASKS = {
         "can_pass":False,
     },
     6: {
+        "file": "task6.html",
         "title": "Задание 6",
         "key": 12345,
         "input_fields": [],  
@@ -90,6 +96,7 @@ TASKS = {
         "can_pass":False,
     },
     7: {
+        "file": "task7.html",
         "title": "Задание 7",
         "key": 12345,
         "input_fields": [],  
@@ -98,6 +105,7 @@ TASKS = {
         "can_pass":False,
     },
     8: {
+        "file": "task8.html",
         "title": "Задание 8",
         "key": 12345,
         "input_fields": ["code"],  
@@ -106,6 +114,7 @@ TASKS = {
         "can_pass":False,
     },
     9: {
+        "file": "task9.html",
         "title": "Задание 9",
         "key": 12345,
         "input_fields": ["code"],  
@@ -114,6 +123,7 @@ TASKS = {
         "can_pass":False,
     },
     10: {
+        "file": "task10.html",
         "title": "Задание 10",
         "key": 12345,
         "input_fields": ["code"],  
@@ -122,6 +132,7 @@ TASKS = {
         "can_pass":True,
     },
     11: {
+        "file": "task11.html",
         "title": "Задание 11",
         "key": 12345,
         "input_fields": ["code"],  
@@ -131,6 +142,7 @@ TASKS = {
     },
 
     12: {
+        "file": "task12.html",
         "title": "Задание 12",
         "key": 12345,
         "input_fields": ["index"],  
@@ -147,6 +159,7 @@ TASKS = {
     },
 
     13: {
+        "file": "task13.html",
         "title": "Задание 13",
         "key": 12345,
         "input_fields": ["code"],  
@@ -156,6 +169,7 @@ TASKS = {
     },
 
     14: {
+        "file": "task14.html",
         "title": "Задание 14",
         "key": 12345,
         "input_fields": ["code"],  
@@ -165,6 +179,7 @@ TASKS = {
     },
 
     15: {
+        "file": "task15.html",
         "title": "Задание 15",
         "key": 12345,
         "input_fields": ["code"],  
@@ -174,6 +189,7 @@ TASKS = {
     },
 
     16: {
+        "file": "task16.html",
         "title": "Задание 16",
         "key": 12345,
         "input_fields": ["code"],  
@@ -182,6 +198,7 @@ TASKS = {
         "can_pass":False,
     },
     17: {
+        "file": "task17.html",
         "title": "Задание 17",
         "key": 12345,
         "input_fields": ["code"],  

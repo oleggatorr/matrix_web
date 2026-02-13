@@ -90,7 +90,7 @@
             <input type="file" name="photo" accept="image/*">
             {% if user.photo_path %}
                 <div style="margin-top:8px; max-width:200px;">
-                    <img src="/static/{{ user.photo_path }}" alt="Фото" style="width:100%; border:1px solid #0f0;">
+                    <img src="/static/{{ user.photo_path }}" onerror="this.style.display='none'"  alt="Фото" style="width:100%; border:1px solid #0f0;"> 
                 </div>
             {% endif %}
         </div>
@@ -118,5 +118,30 @@
         <button type="submit">СОХРАНИТЬ</button>
         <a href="/admin" class="btn">ОТМЕНА</a>
     </form>
+
+    <form method="post" enctype="multipart/form-data">
+    <!-- ... все существующие поля ... -->
+
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #0a3;">
+        
+        <button type="button" 
+                onclick="confirmDelete({{ user.id }})"
+                style="background:#220000; border-color:#f00; color:#f00; margin-left:20px;">
+            УДАЛИТЬ
+        </button>
+    </div>
+    </form>
+    <script>
+    function confirmDelete(userId) {
+        if (confirm("⚠️ Вы уверены, что хотите удалить пользователя ID=" + userId + "?\nЭто действие нельзя отменить!")) {
+            // Создаём форму и отправляем POST на /admin/delete/{id}
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/admin/delete/${userId}`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    </script>
 </body>
 </html>
