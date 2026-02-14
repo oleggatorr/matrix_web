@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Задание 7{% endblock %}
+{% block title %}Задание {{ task_id }}{% endblock %}
 
 {% block content %}
 <h1>Синхронизация с системой</h1>
-<p class="instruction">Персептрон запущен, назад пути нет.</p>Система проверяет твою готовность.
+<p class="instruction">Персептрон запущен, назад пути нет.</p>
+Система проверяет твою готовность.
 Не пытайся обмануть время — оно работает на тебя.<br><br>
 <p class="instruction">Отправка через: <span id="countdown">--</span> секунд...</p>
 
 <!-- Скрытая форма для автоматической отправки -->
 <form id="autoSubmitForm" method="post">
     <!-- Отправляем то, что ожидает TASKS[task_id]["expected"] -->
-    
+    <input type="hidden" name="auto_timer" value="COMPLETED">
 </form>
 
 <!-- Опционально: кнопка "пропустить ожидание" (если разрешено) -->
@@ -27,29 +28,48 @@
 // Время в секундах (должно совпадать с логикой задания)
 const countdownSeconds = 20;
 let timeLeft = countdownSeconds;
+let timer = null;
 
 const countdownEl = document.getElementById('countdown');
 const form = document.getElementById('autoSubmitForm');
 
-const timer = setInterval(() => {
-    timeLeft--;
+// Функция запуска таймера
+function startTimer() {
+    timeLeft = countdownSeconds;
     countdownEl.textContent = timeLeft;
+    
+    timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = timeLeft;
 
-    if (timeLeft <= 0) {
-        clearInterval(timer);
-        form.submit(); // Отправляем форму
-    }
-}, 1000);
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            form.submit(); // Отправляем форму
+        }
+    }, 1000);
+}
+
+// Запускаем таймер при загрузке страницы
+startTimer();
+
+// Добавляем обработчик клика на весь документ
+document.addEventListener('click', function(event) {
+    // Останавливаем текущий таймер
+    clearInterval(timer);
+    // Перезапускаем таймер
+    startTimer();
+    
+    // Опционально: можно добавить визуальную обратную связь
+    countdownEl.style.color = '#0f0'; // Зеленый цвет на мгновение
+    setTimeout(() => {
+        countdownEl.style.color = ''; // Возвращаем обычный цвет
+    }, 200);
+});
+
+// Также можно добавить обработчик для касаний на мобильных устройствах
+document.addEventListener('touchstart', function(event) {
+    clearInterval(timer);
+    startTimer();
+});
 </script>
 {% endblock %}
-
-
-<!--TASKS = {
-    3: {
-        "input_fields": ["auto_timer"],          # обязательно!
-        "expected": {"auto_timer": "COMPLETED"}, # именно эти данные отправятся
-        "error_message": "Таймер был прерван. Повторите попытку.",
-        "can_pass": True,
-        "key": "TIMER_COMPLETE"
-    }
-}-->

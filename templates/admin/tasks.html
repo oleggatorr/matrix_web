@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админка — Задачи</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #0a3;
+            text-align: left;
+        }
+        th {
+            background: rgba(0, 30, 0, 0.4);
+        }
+        .url-cell {
+            font-family: monospace;
+            color: #0c0;
+            word-break: break-all;
+        }
+        .answers-cell {
+            font-family: monospace;
+            background: rgba(0, 20, 0, 0.3);
+            padding: 5px;
+            border-radius: 3px;
+        }
+        a.back-link {
+            color: #f00;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>СПИСОК ЗАДАЧ</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Ссылка (URL)</th>
+                <th>Правильные ответы</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.title or "Без названия" }}</td>
+                <td class="url-cell">
+                    <a href="/tasks/{{ task.id }}?pass_code={{ task.key }}" class="back-link">/tasks/{{ task.id }}?pass_code={{ task.key }}</a>
+                </td>
+                <td class="answers-cell">
+                    {% if task.expected %}
+                        {% for key, value in task.expected.items() %}
+                            {{ key }} = <strong>{{ value }}</strong>
+                            {% if not loop.last %}<br>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <em>нет полей ввода</em>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/admin" class="back-link">← Назад в админку</a>
+</body>
+</html>

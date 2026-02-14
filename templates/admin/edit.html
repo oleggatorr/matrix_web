@@ -106,9 +106,18 @@
         </div>
 
         <div class="form-group">
-            <label>Решённые задачи</label>
-            <input name="solved_tasks" type="number" value="{{solved_tasks or 0 }}">
-        </div>
+    <label>Решённые задачи (битовая маска)</label>
+    <input name="solved_tasks_bin" 
+           value="{{ '{:08b}'.format(user.solved_tasks) if user.solved_tasks else '00000000' }}" 
+           class="matrix-input"
+           placeholder="Например: 10110011">
+        <small style="color:#0c0; display:block; margin-top:4px;">
+            Текущее значение: {{ user.solved_tasks }} ({{ '{:08b}'.format(user.solved_tasks) }})
+        </small>
+    </div>
+
+<!-- Скрытое поле для отправки числа (на случай, если JS отключён) -->
+<input type="hidden" name="solved_tasks" value="{{ user.solved_tasks or 0 }}">
 
         <div class="form-group">
             <label>Текущая задача</label>
@@ -116,7 +125,7 @@
         </div>
 
         <button type="submit">СОХРАНИТЬ</button>
-        <a href="/admin" class="btn">ОТМЕНА</a>
+        <a href="/admin/users" class="btn">ОТМЕНА</a>
     </form>
 
     <form method="post" enctype="multipart/form-data">

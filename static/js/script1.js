@@ -45,9 +45,9 @@ function draw() {
 }
 function confirmLogout() {
     // Первое подтверждение
-    if (confirm("Текст?")) {
+    if (confirm("Вы собираетесь завершить испытание?")) {
         // Второе подтверждение
-        if (confirm("Текст?")) {
+        if (confirm("Вы сможете продолжить выполнение заданий позже")) {
             // Перенаправляем на роут /logout
             window.location.href = "/finish";
         }

@@ -13,6 +13,8 @@ from tasks_config import TASKS
 import os
 from pathlib import Path
 import uuid
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
 # Создаём таблицы
@@ -60,6 +62,7 @@ def update_user_progress(db: Session, user: User, task_id: int):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, db: Session = Depends(get_db)):
+    print(1234)
     user_id = request.cookies.get("user_id")
     if not user_id or not user_id.isdigit():
         return RedirectResponse(url="/login")
@@ -92,24 +95,7 @@ async def home(request: Request, db: Session = Depends(get_db)):
     return RedirectResponse(url=f"/tasks/{next_task_id}?pass_code={next_pass_code}")
 
 
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request, db: Session = Depends(get_db)):
-    user_id = request.cookies.get("user_id")
-    if not user_id or not user_id.isdigit():
-        return RedirectResponse(url="/login")
 
-    user = db.query(User).filter(User.id == int(user_id)).first()
-    if not user:
-        return RedirectResponse(url="/login")
-
-    print(user.username == 'admin')
-    print(121212)
-    # Показываем домашнюю страницу
-    return templates.TemplateResponse("home.html", {
-        "request": request,
-        "username": user.username,
-        "admin": user.username == 'admin'
-    })
 
 @app.post("/")
 async def start_session(request: Request, db: Session = Depends(get_db)):
@@ -131,14 +117,14 @@ async def start_session(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404)
     
     return RedirectResponse(
-        url = f"/tasks/{TASKS.get(1).get('file')}?{TASKS.get(1).get('key')}",
+        url = f"/tasks/1?pass_code={TASKS.get(1).get('key')}",
         status_code=303
     )
 
 
 @app.get("/list", response_class=HTMLResponse)
 async def show_list(request: Request, db: Session = Depends(get_db)):
-    users = db.query(User).all()
+    users = db.query(User).filter(User.username != "admin").all()
     return templates.TemplateResponse("list.html", {"request": request, "users": users})
 
 
@@ -147,6 +133,7 @@ async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
+# В main.py, в роуте @app.post("/login")
 @app.post("/login")
 async def login(
     request: Request,
@@ -156,18 +143,21 @@ async def login(
 ):
     user = db.query(User).filter(
         User.username == username,
-        User.password == password  # ← сравнение в открытом виде
+        User.password == password
     ).first()
 
     if not user:
-        # Ошибка: неверный логин или пароль
         return templates.TemplateResponse("login.html", {
             "request": request,
             "error": "Неверный логин или пароль"
         })
 
-    # Успешный вход
     response = RedirectResponse(url="/", status_code=303)
+    
+    # 🔸 Если админ — перенаправляем в админку
+    if user.username == "admin":
+        response = RedirectResponse(url="/admin", status_code=303)
+    
     response.set_cookie(key="user_id", value=str(user.id), max_age=86400)
     return response
 
@@ -393,11 +383,10 @@ async def task_submit(
                 "symbols" : TASKS.get(task_id).get("SYMBOLS"),
                 "correct_symbol_id" : TASKS.get(task_id).get("correct_symbol_id", 0)# или из конфига
             })
-        elif task_id == 3:
-            base_context["symbols"] = SYMBOLS
+
         
         return templates.TemplateResponse(
-            f"/tasks/{TASKS.get(1).get('file')}?{TASKS.get(1).get('key')}",
+            f"/tasks/{TASKS.get(task_id).get('file')}",
             base_context
         )
 
@@ -498,8 +487,54 @@ def require_admin(request: Request, db: Session):
         raise HTTPException(status_code=403, detail="Только администратор")
     return user
 
-# Список пользователей
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
+    if exc.status_code == 404:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "Страница не найдена"},
+            status_code=404
+        )
+    elif exc.status_code == 403:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": exc.detail or "Доступ запрещён"},
+            status_code=403
+        )
+    # Для других ошибок можно вернуть JSON или шаблон
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail}
+    )
+
 @app.get("/admin", response_class=HTMLResponse)
+async def admin_dashboard(request: Request, db: Session = Depends(get_db)):
+    require_admin(request, db)  # ваша функция проверки
+    return templates.TemplateResponse("admin/dashboard.html", {"request": request})
+
+
+@app.get("/admin/tasks", response_class=HTMLResponse)
+async def admin_tasks_list(request: Request, db: Session = Depends(get_db)):
+    require_admin(request, db)
+    
+    from tasks_config import TASKS
+    
+    tasks = []
+    for tid, config in sorted(TASKS.items()):
+        tasks.append({
+            "id": tid,
+            "title": config.get("title", f"Задание {tid}"),
+            "key": config.get("key", "???"),
+            "expected": config.get("expected", {})
+        })
+    
+    return templates.TemplateResponse("admin/tasks.html", {
+        "request": request,
+        "tasks": tasks
+    })
+
+# Список пользователей
+@app.get("/admin/users", response_class=HTMLResponse)
 async def admin_list(request: Request, db: Session = Depends(get_db)):
     require_admin(request, db)
     users = db.query(User).all()
@@ -540,7 +575,8 @@ async def admin_edit_submit(
     photo: UploadFile = File(None),
     start_time: str = Form(""),
     end_time: str = Form(""),
-    solved_tasks: int = Form(0),
+    solved_tasks: int = Form(0),          # ← старое числовое значение (резерв)
+    solved_tasks_bin: str = Form(""),     # ← новое бинарное значение
     active_task: int = Form(-1),
     db: Session = Depends(get_db)
 ):
@@ -559,13 +595,28 @@ async def admin_edit_submit(
                 f.write(await photo.read())
             user.photo_path = f"uploads/{filename}"
 
+    if solved_tasks_bin.strip():
+        # Убираем всё, кроме 0 и 1
+        bin_str = ''.join(c for c in solved_tasks_bin if c in '01')
+        if bin_str:
+            try:
+                user.solved_tasks = int(bin_str, 2)
+            except ValueError:
+                # Если что-то пошло не так — оставляем старое значение
+                pass
+        else:
+            user.solved_tasks = 0
+    else:
+        # Если поле пустое — используем числовое значение (на всякий случай)
+        user.solved_tasks = solved_tasks
+
+
     # Обновляем остальные поля
     user.username = username
     user.password = password
     user.participants_full_names = participants_full_names
     user.email = email
     user.phone = phone
-    user.solved_tasks = solved_tasks
     user.active_task = active_task
 
     # Обработка времени
@@ -575,7 +626,7 @@ async def admin_edit_submit(
     db.commit()
     db.refresh(user)
 
-    return RedirectResponse(url="/admin", status_code=303)
+    return RedirectResponse(url="/admin/users", status_code=303)
 
 @app.post("/admin/delete/{user_id}")
 async def admin_delete_user(
@@ -600,7 +651,7 @@ async def admin_delete_user(
 
     db.delete(user)
     db.commit()
-    return RedirectResponse(url="/admin", status_code=303)
+    return RedirectResponse(url="/admin/users", status_code=303)
 
 # Тестовая страница (можно удалить в продакшене)
 @app.get("/test", response_class=HTMLResponse)

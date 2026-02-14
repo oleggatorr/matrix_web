@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 40px;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+        .admin-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 500px;
+        }
+        .admin-btn {
+            display: block;
+            padding: 15px;
+            background: transparent;
+            color: #0f0;
+            border: 1px solid #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .admin-btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        .back-link {
+            margin-top: 30px;
+            display: inline-block;
+            color: #f00;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>АДМИН-ПАНЕЛЬ</h1>
+    
+    <div class="admin-menu">
+        <a href="/admin/users" class="admin-btn">СПИСОК ПОЛЬЗОВАТЕЛЕЙ</a>
+        <a href="/admin/tasks" class="admin-btn">СПИСОК ЗАДАЧ</a>
+    </div>
+
+    <a href="/" class="back-link">← Назад на главную</a>
+</body>
+</html>

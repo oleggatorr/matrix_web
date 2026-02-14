@@ -5,31 +5,33 @@
 
 {% block content %}
 <h1>СИСТЕМА ЗАВЕРШЕНА</h1>
-<p class="instruction">Текст</p>
+<p class="instruction">Цикл замкнут. Ты прошёл сквозь Матрицу.</p>
 
 <div class="matrix-message-box">
     <p>Поздравляем, {{ username }}.</p>
-    <p>Текст</p>
+    <p>Ты не просто решил задачи — ты увидел то, что скрыто за кодом.<br>
+       От первого шага до последнего — каждый выбор был твоим.</p>
     <p class="symbol">01010011 01001001 01001110 01000111 01010101 01001100 01000001 01010010 01001001 01010100 01011001</p>
+    <!-- Расшифровка: SINGULARITY -->
 </div>
 
 <button class="matrix-btn" onclick="finishSession()">Завершить сессию</button>
 {% endblock %}
 
 {% block footbutton %}
-<!-- Заменяем кнопку "Выйти" на "На главную" -->
-
+<!-- Кнопка "На главную" не нужна — финал самодостаточен -->
 {% endblock %}
 
 {% block script %}
 <script>
 function finishSession() {
-    // Имитация "завершения" с эффектом
     const btn = document.querySelector('button');
     btn.textContent = "Отключение...";
     btn.disabled = true;
     
-    // Опционально: можно отправить запрос на /logout
+    // Эффект "растворения" (опционально)
+    document.body.style.opacity = "0.7";
+    
     setTimeout(() => {
         alert("Сессия завершена. Спасибо за участие.");
         window.location.href = "/logout";
