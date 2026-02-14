@@ -15,6 +15,7 @@ from pathlib import Path
 import uuid
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi.responses import FileResponse
 
 
 # Создаём таблицы
@@ -58,6 +59,10 @@ def update_user_progress(db: Session, user: User, task_id: int):
     user.active_task = task_id
     db.commit()  # user уже отслеживается сессией
 
+
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse("static/favicon.png")
 
 
 @app.get("/", response_class=HTMLResponse)
