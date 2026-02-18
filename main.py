@@ -89,7 +89,7 @@ async def home(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url=f"/finish?pass_code={FINISH_CODE}")
 
     # Иначе — перенаправляем на следующую задачу
-    next_task_id = user.solved_tasks + 1
+    next_task_id = user.active_task
     if next_task_id > max(TASKS.keys()):
         return RedirectResponse(url=f"/finish?pass_code={FINISH_CODE}")
 
@@ -177,16 +177,25 @@ async def logout():
 @app.get("/finish", response_class=HTMLResponse)
 async def finish_page(
     request: Request,
+    pass_code: int,
     db: Session = Depends(get_db)
 ):
-    print(1)
+   
     user_id = request.cookies.get("user_id")
     if not user_id or not user_id.isdigit():
         return RedirectResponse(url="/login")
-    print(2)
+    
     user = db.query(User).filter(User.id == int(user_id)).first()
     if not user:
         return RedirectResponse(url="/login")
+
+    if pass_code != FINISH_CODE:
+        raise HTTPException(status_code=404)
+
+    if user.end_time == None:
+        user.end_time = datetime.utcnow()
+        db.commit()
+        
 
     return templates.TemplateResponse("finish.html", {"request": request, "username": user.username})
 

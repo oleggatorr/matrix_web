@@ -49,7 +49,7 @@ function confirmLogout() {
         // Второе подтверждение
         if (confirm("Вы сможете продолжить выполнение заданий позже")) {
             // Перенаправляем на роут /logout
-            window.location.href = "/finish";
+            window.location.href = "/logout";
         }
     }
 }
