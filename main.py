@@ -67,7 +67,7 @@ async def favicon():
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, db: Session = Depends(get_db)):
-    print(1234)
+    
     user_id = request.cookies.get("user_id")
     if not user_id or not user_id.isdigit():
         return RedirectResponse(url="/login")
@@ -241,7 +241,7 @@ async def task_page(
     context = {**base_context, "symbols": TASKS.get(task_id).get("SYMBOLS",None),
                        "correct_symbol_id": TASKS.get(task_id).get("correct_symbol_id","0")}
     filename =f"tasks/{TASKS.get(task_id).get('file')}"
-    print(filename)
+    
     if task_id: 
         if task_id == 1:
             
@@ -334,7 +334,7 @@ async def task_submit(
 
     # Определяем успех
     input_fields = task_config.get("input_fields", [])
-    print(answers)
+    
     if not input_fields:
         success = True  # Пустая форма = успех
     else:

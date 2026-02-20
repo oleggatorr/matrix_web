@@ -15,7 +15,7 @@ TASKS = {
     "input_fields": ["selected_id"],
     "expected": {"selected_id": "0"},
     "error_message": "Тревога! Высока опасность обнаружения.",
-    "key": 12345,
+    "key": 149,
     "can_pass":False,
     "SYMBOLS":[
     {"image": "/static/images/phone1.png", "message": "Сообщение 1", "id": "0"},
@@ -44,16 +44,16 @@ TASKS = {
     3: {
         "file": "task3.html",
         "title": "Задание 3",
-        "key": 12345,
+        "key": 136,
         "input_fields": [],  
         "expected": {},
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    4: {
+    5: {
         "file": "task4.html",
         "title": "Задание 4",
-        "key": 12345,
+        "key": 1238,
         "input_fields": ["code"],  
         "expected": {"code": "ESCAPE"},
         "error_message": "Ошибка активации. Тебуется верный код",
@@ -77,74 +77,74 @@ TASKS = {
     ],
     "correct_symbol_id": "0"
     },
-    5: {
+    11: {
         "file": "task5.html",
         "title": "Задание 5",
-        "key": 12345,
+        "key": 153,
         "input_fields": ["code"],  
         "expected": {"code": "COLLISION"},
         "error_message": "Ты ошибся, но ошибки делают нас сильнее...",
         "can_pass":False,
     },
-    6: {
+    14: {
         "file": "task6.html",
         "title": "Задание 6",
-        "key": 12345,
+        "key": 178935,
         "input_fields": [],  
         "expected": {},
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    7: {
+    6: {
         "file": "task7.html",
         "title": "Задание 7",
-        "key": 12345,
+        "key": 8673,
         "input_fields": [],  
         "expected": {},
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    8: {
+    9: {
         "file": "task8.html",
         "title": "Задание 8",
-        "key": 12345,
+        "key": 228337,
         "input_fields": ["code"],  
         "expected": {"code": "SHARARAM"},
         "error_message": "Обнаружен робот! Одна ошибка и ты ошибся. Человек человеку человек",
         "can_pass":False,
     },
-    9: {
+    16: {
         "file": "task9.html",
         "title": "Задание 9",
-        "key": 12345,
+        "key": 1345,
         "input_fields": ["code"],  
         "expected": {"code": "12345"},
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    10: {
+    4: {
         "file": "task10.html",
         "title": "Задание 10",
-        "key": 12345,
+        "key": 232323,
         "input_fields": ["code"],  
         "expected": {"code": "36"},
         "error_message": "wrong answer",
         "can_pass":True,
     },
-    11: {
+    7: {
         "file": "task11.html",
         "title": "Задание 11",
-        "key": 12345,
+        "key": 190403,
         "input_fields": ["code"],  
         "expected": {"code": "CYBER"},
         "error_message": "wrong answer",
         "can_pass":False,
     },
 
-    12: {
+    15: {
         "file": "task12.html",
         "title": "Задание 12",
-        "key": 12345,
+        "key": 10101010,
         "input_fields": ["index"],  
         "expected": {"index": "3"},
         "error_message": "wrong answer",
@@ -161,37 +161,37 @@ TASKS = {
     13: {
         "file": "task13.html",
         "title": "Задание 13",
-        "key": 12345,
+        "key": 111111,
         "input_fields": ["code"],  
         "expected": {"code": "AHKIJE"},
-        "error_message": "wrong answer",
+        "error_message": "Путь неверен",
         "can_pass":False,
     },
 
-    14: {
+    8: {
         "file": "task14.html",
         "title": "Задание 14",
-        "key": 12345,
+        "key": 16767,
         "input_fields": ["code"],  
         "expected": {"code": "AHA"},
         "error_message": "wrong answer",
         "can_pass":False,
     },
 
-    15: {
+    10: {
         "file": "task15.html",
         "title": "Задание 15",
-        "key": 12345,
+        "key": 67,
         "input_fields": ["code"],  
         "expected": {"code": "OLEG_13579"},
-        "error_message": "wrong answer",
+        "error_message": "Пароль неверный, доступ запрещён",
         "can_pass":False,
     },
 
-    16: {
+    12: {
         "file": "task16.html",
         "title": "Задание 16",
-        "key": 12345,
+        "key": 3246,
         "input_fields": ["code"],  
         "expected": {"code": "7"},
         "error_message": "wrong answer",
