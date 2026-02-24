@@ -5,7 +5,7 @@ TASKS = {
         "title": "Задание 1",
         "key": 12345,
         "input_fields": ["code"],  # одно поле с именем "code"
-        "expected": {"code": 'HELLOW_WORLD'},
+        "expected": {"code": 'HELLO_WORLD'},
         "error_message": "В доступе отказано: пароль не верный",
         "can_pass":False
 
@@ -50,7 +50,17 @@ TASKS = {
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    5: {
+    4:
+    {
+        "file": "task0.html",
+        "title": "Задание -1",
+        "key": 100001,
+        "input_fields": ["code"],  # одно поле с именем "code"
+        "expected": {"code": '6'},
+        "error_message": "ответ неверен, подумай ещё",
+        "can_pass":False
+    },
+    6: {
         "file": "task4.html",
         "title": "Задание 4",
         "key": 1238,
@@ -77,7 +87,7 @@ TASKS = {
     ],
     "correct_symbol_id": "0"
     },
-    11: {
+    12: {
         "file": "task5.html",
         "title": "Задание 5",
         "key": 153,
@@ -86,7 +96,7 @@ TASKS = {
         "error_message": "Ты ошибся, но ошибки делают нас сильнее...",
         "can_pass":False,
     },
-    14: {
+    15: {
         "file": "task6.html",
         "title": "Задание 6",
         "key": 178935,
@@ -95,7 +105,7 @@ TASKS = {
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    6: {
+    7: {
         "file": "task7.html",
         "title": "Задание 7",
         "key": 8673,
@@ -104,7 +114,7 @@ TASKS = {
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    9: {
+    10: {
         "file": "task8.html",
         "title": "Задание 8",
         "key": 228337,
@@ -113,7 +123,7 @@ TASKS = {
         "error_message": "Обнаружен робот! Одна ошибка и ты ошибся. Человек человеку человек",
         "can_pass":False,
     },
-    16: {
+    17: {
         "file": "task9.html",
         "title": "Задание 9",
         "key": 1345,
@@ -122,7 +132,7 @@ TASKS = {
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    4: {
+    5: {
         "file": "task10.html",
         "title": "Задание 10",
         "key": 232323,
@@ -131,7 +141,7 @@ TASKS = {
         "error_message": "wrong answer",
         "can_pass":True,
     },
-    7: {
+    8: {
         "file": "task11.html",
         "title": "Задание 11",
         "key": 190403,
@@ -141,7 +151,7 @@ TASKS = {
         "can_pass":False,
     },
 
-    15: {
+    16: {
         "file": "task12.html",
         "title": "Задание 12",
         "key": 10101010,
@@ -158,7 +168,7 @@ TASKS = {
          ]
     },
 
-    13: {
+    14: {
         "file": "task13.html",
         "title": "Задание 13",
         "key": 111111,
@@ -168,7 +178,7 @@ TASKS = {
         "can_pass":False,
     },
 
-    8: {
+    9: {
         "file": "task14.html",
         "title": "Задание 14",
         "key": 16767,
@@ -178,7 +188,7 @@ TASKS = {
         "can_pass":False,
     },
 
-    10: {
+    11: {
         "file": "task15.html",
         "title": "Задание 15",
         "key": 67,
@@ -188,7 +198,7 @@ TASKS = {
         "can_pass":False,
     },
 
-    12: {
+    13: {
         "file": "task16.html",
         "title": "Задание 16",
         "key": 3246,
@@ -197,12 +207,12 @@ TASKS = {
         "error_message": "wrong answer",
         "can_pass":False,
     },
-    17: {
+    18: {
         "file": "task17.html",
         "title": "Задание 17",
         "key": 12345,
         "input_fields": ["code"],  
-        "expected": {"code": 'HELLOW_WORLD'},
+        "expected": {"code": 'HELLO_WORLD'},
         "error_message": "подсказка в коде",
         "can_pass":False,
     },

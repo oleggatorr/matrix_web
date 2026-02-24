@@ -1,20 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}Задание 1{% endblock %}
+{% block title %}Задание {{ task_id }}{% endblock %}
 
 {% block content %}
-<h1>Текст.</h1>
-<p class="instruction">Текст.</p>
+<h1>Проверка связи</h1>
+<p class="instruction">
+    Системный тест: реши простое уравнение.<br>
+    Введи ответ цифрой, без пробелов и дополнительных символов.
+</p>
+
+<!-- Визуальное отображение задачи -->
+<div class="equation-display" style="
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #0f0;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+    margin: 40px 0;
+    letter-spacing: 8px;
+">
+    2 + 2 * 2 = ?
+</div>
 
 <!-- Сообщение об ошибке -->
 {% if error %}
     <div class="error-message">{{ error }}</div>
 {% endif %}
 
-<!-- Форма ввода кода -->
+<!-- Форма ввода ответа -->
 <form method="post">
     <div class="input-group">
-        <label for="code">Ответ:</label>
+        <label for="code">Твой ответ:</label>
         <input 
             type="text"     
             id="code" 
@@ -22,12 +38,28 @@
             class="matrix-input" 
             required 
             value="{{ code or '' }}"
+            placeholder="введи число"
+            autocomplete="off"
+            maxlength="10"
         >
     </div>
-    <button type="submit" class="matrix-btn">Текст</button>
+    <button type="submit" class="matrix-btn">ОТПРАВИТЬ</button>
 </form>
+
+<!-- Подсказка для новичков (опционально, можно убрать) -->
+<p style="text-align: center; margin-top: 20px; font-size: 0.85em; opacity: 0.6;">
+    [Подсказка: ответ — одна цифра]
+</p>
 {% endblock %}
 
 {% block script %}
-
+<!-- Опционально: автофокус на поле ввода -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('code');
+        if (input && !input.value) {
+            input.focus();
+        }
+    });
+</script>
 {% endblock %}

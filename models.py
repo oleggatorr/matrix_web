@@ -17,6 +17,9 @@ class User(Base):
     solved_tasks = Column(Integer)
     active_task = Column(Integer, nullable=True)
 
+    school = Column(String, nullable=True, index=True)  # Название школы
+    city = Column(String, nullable=True, index=True)    # Город
+
 
 
 def print_user(user: User):

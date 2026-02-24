@@ -5,94 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список команд</title>
     <style>
-        /* Стили в духе Матрицы */
+        /* Matrix-style */
         body {
             background-color: #000;
             color: #0f0;
             font-family: 'Courier New', monospace;
             margin: 0;
             padding: 20px;
-            line-height: 1.5;
+            line-height: 1.4;
+            font-size: 14px;
         }
 
         h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1.5rem;
-            letter-spacing: 2px;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
             text-shadow: 0 0 5px rgba(0, 255, 0, 0.4);
+            text-align: center;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1400px;
             margin: 0 auto;
+            overflow-x: auto;
         }
 
-        .user-card {
-            background: rgba(0, 15, 0, 0.2);
+        /* Таблица */
+        table {
+            width: 100%;
+            border-collapse: collapse;
             border: 1px solid #0a3;
-            margin-bottom: 12px;
-            border-radius: 4px;
-            overflow: hidden;
+            background: rgba(0, 15, 0, 0.15);
         }
 
-        .user-header {
-            padding: 12px 15px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            background: rgba(0, 30, 0, 0.3);
+        th {
+            background: rgba(0, 30, 0, 0.4);
+            color: #0f0;
+            padding: 10px 6px;
+            text-align: center;
             font-weight: bold;
+            border: 1px solid #0a3;
+            position: sticky;
+            top: 0;
         }
 
-        .user-header:hover {
-            background: rgba(0, 50, 0, 0.4);
+        td {
+            padding: 8px 6px;
+            border: 1px solid #0a3;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .user-details {
-            padding: 0 15px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-            background: rgba(0, 10, 0, 0.1);
+        tr:hover {
+            background: rgba(0, 50, 0, 0.2);
         }
 
-        .user-details.show {
-            max-height: 500px;
-            padding: 15px;
+        /* Колонки */
+        .col-id { width: 50px; }
+        .col-team { min-width: 150px; text-align: left; }
+        .col-photo { width: 80px; }
+        .col-tasks { width: 360px; }
+        .col-solved { width: 70px; }
+        .col-time { width: 180px; }
+
+        /* Фото */
+        .photo-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border: 1px solid #0f0;
+            border-radius: 2px;
         }
 
-        .detail-row {
-            display: flex;
-            margin: 8px 0;
+        .no-photo {
+            color: #080;
+            font-size: 0.8em;
         }
 
-        .detail-label {
-            width: 200px;
+        /* Задачи: сетка 1-18 */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 2px;
+            justify-content: center;
+        }
+
+        .task-cell {
+            width: 14px;
+            height: 14px;
+            border: 1px solid #0a3;
+            background: #000;
+            transition: background 0.2s;
+        }
+
+        .task-cell.solved {
+            background: #0f0;
+            box-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
+        }
+
+        .task-cell:hover::after {
+            content: attr(data-num);
+            position: absolute;
+            background: #000;
+            color: #0f0;
+            padding: 2px 4px;
+            font-size: 10px;
+            border: 1px solid #0f0;
+            z-index: 10;
+            margin-top: -25px;
+        }
+
+        /* Счётчик решённых */
+        .solved-count {
             font-weight: bold;
-            color: #0c0;
+            color: #0f0;
         }
 
-        .detail-value {
-            flex: 1;
+        /* Автообновление */
+        .refresh-indicator {
+            text-align: right;
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-bottom: 5px;
         }
 
         .empty {
+            text-align: center;
+            padding: 2rem;
             font-style: italic;
             opacity: 0.7;
-            margin-top: 1rem;
         }
 
         .back-link {
             display: inline-block;
-            margin-top: 2rem;
-            padding: 8px 20px;
+            margin-top: 1rem;
+            padding: 6px 16px;
             background: transparent;
             color: #f00;
             border: 1px solid #f00;
             text-decoration: none;
             font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
+            font-size: 1rem;
             transition: all 0.2s;
         }
 
@@ -100,95 +153,106 @@
             background: rgba(0, 255, 0, 0.1);
             box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
         }
+
+        /* Адаптив для маленьких экранов */
+        @media (max-width: 1200px) {
+            .tasks-grid {
+                grid-template-columns: repeat(9, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>СПИСОК КОМАНД</h1>
+        
+        <div class="refresh-indicator">
+            Обновление: <span id="countdown">20</span>с
+        </div>
 
         {% if users %}
-            {% for user in users %}
-            <div class="user-card">
-                <div class="user-header" onclick="toggleDetails(this)">
-                    <span>ID: {{ user.id }} | {{ user.username }}</span>
-                    <span>[ + ]</span>
-                </div>
-                <div class="user-details">
-                    <div class="detail-row">
-                        <div class="detail-label">Участники:</div>
-                        <div class="detail-value">{{ user.participants_full_names or '—' }}</div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Email:</div>
-                        <div class="detail-value">{{ user.email or '—' }}</div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Телефон:</div>
-                        <div class="detail-value">{{ user.phone or '—' }}</div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Фото:</div>
-                        <div class="detail-value">
-                            {% if user.photo_path %}
-                                <img src="{{ url_for('static', path='/' + user.photo_path) }}" 
-                                     alt="Фото" style="max-height: 100px; border: 1px solid #0f0;">
-                            {% else %}
-                                —
-                            {% endif %}
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-id">#</th>
+                    <th class="col-team">Команда</th>
+                    <th class="col-photo">Фото</th>
+                    <th class="col-tasks">Задачи (1-18)</th>
+                    <th class="col-solved">Решено</th>
+                    <th class="col-time">Старт / Финиш</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td style="text-align: left; padding-left: 10px;">
+                        <strong>{{ user.username }}</strong><br>
+                        <small style="opacity: 0.7">{{ user.participants_full_names }}</small>
+                    </td>
+                    <td>
+                        {% if user.photo_path %}
+                            <img src="{{ url_for('static', path='/' + user.photo_path) }}" 
+                                 alt="Фото" class="photo-thumb">
+                        {% else %}
+                            <span class="no-photo">[нет]</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="tasks-grid">
+                            {% for task_num in range(1, 18) %}
+                                <div class="task-cell {% if user.tasks[task_num] %}solved{% endif %}" 
+                                     data-num="{{ task_num }}"
+                                     title="Задача {{ task_num }}: {% if user.tasks[task_num] %}✓ решена{% else %}✗ не решена{% endif %}">
+                                </div>
+                            {% endfor %}
                         </div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Время начала:</div>
-                        <div class="detail-value">
-                            {{ user.start_time.strftime('%Y-%m-%d %H:%M:%S') if user.start_time else '—' }}
-                        </div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Время окончания:</div>
-                        <div class="detail-value">
-                            {{ user.end_time.strftime('%Y-%m-%d %H:%M:%S') if user.end_time else '—' }}
-                        </div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Решено задач:</div>
-                        <div class="detail-value">{{ user.solved_tasks or 0 }}</div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Текущая задача:</div>
-                        <div class="detail-value">{{ user.active_task or '—' }}</div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+                    </td>
+                    <td><span class="solved-count">{{ user.solved_count }}/18</span></td>
+                    <td style="font-size: 0.85em;">
+                        {% if user.start_time %}
+                            {{ user.start_time.strftime('%H:%M:%S') }}
+                        {% else %}—{% endif %}
+                        {% if user.end_time %}
+                            <br>→ {{ user.end_time.strftime('%H:%M:%S') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-            <p class="empty">Пользователи не найдены.</p>
+            <p class="empty">Команды не найдены.</p>
         {% endif %}
 
-        <a href="/" class="back-link">← Назад на главную</a>
+        <a href="/" class="back-link">← На главную</a>
     </div>
 
     <script>
-        function toggleDetails(header) {
-            const details = header.nextElementSibling;
-            const isOpen = details.classList.contains('show');
-            
-            // Скрыть все другие открытые блоки
-            document.querySelectorAll('.user-details.show').forEach(el => {
-                if (el !== details) {
-                    el.classList.remove('show');
-                    el.previousElementSibling.querySelector('span:last-child').textContent = '[ + ]';
-                }
-            });
-
-            // Переключить текущий
-            if (isOpen) {
-                details.classList.remove('show');
-                header.querySelector('span:last-child').textContent = '[ + ]';
-            } else {
-                details.classList.add('show');
-                header.querySelector('span:last-child').textContent = '[ – ]';
+        // Автообновление каждые 20 секунд
+        const REFRESH_INTERVAL = 20;
+        let countdown = REFRESH_INTERVAL;
+        
+        const countdownEl = document.getElementById('countdown');
+        
+        setInterval(() => {
+            countdown--;
+            if (countdown <= 0) {
+                location.reload();
+                countdown = REFRESH_INTERVAL;
             }
-        }
+            countdownEl.textContent = countdown;
+        }, 1000);
+
+        // Подсветка строки при наведении на задачу
+        document.querySelectorAll('.task-cell').forEach(cell => {
+            cell.addEventListener('mouseenter', function() {
+                this.closest('tr').style.background = 'rgba(0, 80, 0, 0.3)';
+            });
+            cell.addEventListener('mouseleave', function() {
+                this.closest('tr').style.background = '';
+            });
+        });
     </script>
 </body>
 </html>

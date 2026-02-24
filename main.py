@@ -129,8 +129,31 @@ async def start_session(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/list", response_class=HTMLResponse)
 async def show_list(request: Request, db: Session = Depends(get_db)):
-    users = db.query(User).filter(User.username != "admin").all()
-    return templates.TemplateResponse("list.html", {"request": request, "users": users})
+    # Получаем всех пользователей кроме admin, сортируем по ID возрастанию
+    users = db.query(User).filter(User.username != "admin").order_by(User.id.asc()).all()
+    
+    # Подготавливаем данные для шаблона
+    users_data = []
+    for user in users:
+        # Создаём объект TaskStemps из поля solved_tasks (битовая маска)
+        task_tracker = TaskStemps(user.solved_tasks or 0)
+        
+        # Генерируем словарь {1: True/False, 2: ..., 18: ...}
+        tasks_status = {i: task_tracker.get_task(i) for i in range(1, 19)}
+        
+        # Считаем количество решённых задач
+        solved_count = sum(1 for i in range(1, 19) if task_tracker.get_task(i))
+        
+        users_data.append({
+            **user.__dict__,
+            'tasks': tasks_status,
+            'solved_count': solved_count,
+        })
+    
+    return templates.TemplateResponse("list.html", {
+        "request": request, 
+        "users": users_data
+    })
 
 
 @app.get("/login", response_class=HTMLResponse)
@@ -672,7 +695,7 @@ async def admin_delete_user(
 async def get_register_page(request: Request):
     """Отображение страницы регистрации"""
     return templates.TemplateResponse(
-        "base.html",
+        "tasks/task0.html",
         {
             "request": request,
         }
