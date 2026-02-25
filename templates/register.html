@@ -390,7 +390,7 @@
             </div>
 
             <div class="form-group">
-                <label for="participants_full_names">ЧЛЕНЫ КОМАНДЫ <span class="required">*</span></label>
+                <label for="participants_full_names">ЧЛЕНЫ КОМАНДЫ (ФИО И КЛАСС) <span class="required">*</span></label>
                 <textarea id="participants_full_names" name="participants_full_names" rows="3" placeholder="enter full names" required>{{ form_data.participants_full_names if form_data else '' }}</textarea>
                 {% if errors and 'participants_full_names' in errors %}
                 <div class="error-message show" id="participantsError">> ERROR: {{ errors.participants_full_names }}</div>
