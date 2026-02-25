@@ -19,14 +19,25 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            font-size: 0.9rem;
         }
         th, td {
             padding: 8px 10px;
             text-align: left;
             border-bottom: 1px solid #0a3;
+            vertical-align: top;
         }
         th {
             background: rgba(0, 30, 0, 0.4);
+            position: sticky;
+            top: 0;
+        }
+        /* Стили для новых колонок */
+        .col-school, .col-city {
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         a {
             color: #0f0;
@@ -34,9 +45,17 @@
             padding: 4px 8px;
             border: 1px solid #0f0;
             font-size: 0.9em;
+            display: inline-block;
         }
         a:hover {
             background: rgba(0, 255, 0, 0.1);
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1100px) {
+            .col-school, .col-city {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -50,6 +69,8 @@
                     <th>ID</th>
                     <th>Имя</th>
                     <th>Участники</th>
+                    <th class="col-school">Школа</th>   <!-- Новая колонка -->
+                    <th class="col-city">Город</th>      <!-- Новая колонка -->
                     <th>Email</th>
                     <th>Действия</th>
                 </tr>
@@ -60,6 +81,15 @@
                     <td>{{ u.id }}</td>
                     <td>{{ u.username }}</td>
                     <td>{{ u.participants_full_names[:40] }}{% if u.participants_full_names|length > 40 %}...{% endif %}</td>
+                    
+                    <!-- Новые ячейки с обработкой пустых значений -->
+                    <td class="col-school" title="{{ u.school or '' }}">
+                        {{ u.school if u.school else '—' }}
+                    </td>
+                    <td class="col-city" title="{{ u.city or '' }}">
+                        {{ u.city if u.city else '—' }}
+                    </td>
+                    
                     <td>{{ u.email }}</td>
                     <td><a href="/admin/edit/{{ u.id }}">РЕДАКТИРОВАТЬ</a></td>
                 </tr>

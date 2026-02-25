@@ -25,7 +25,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px; /* Увеличили для новых колонок */
             margin: 0 auto;
             overflow-x: auto;
         }
@@ -47,6 +47,7 @@
             border: 1px solid #0a3;
             position: sticky;
             top: 0;
+            z-index: 5;
         }
 
         td {
@@ -64,9 +65,19 @@
         .col-id { width: 50px; }
         .col-team { min-width: 150px; text-align: left; }
         .col-photo { width: 80px; }
+        .col-school { min-width: 120px; max-width: 180px; } /* Новая */
+        .col-city { min-width: 100px; max-width: 140px; }   /* Новая */
         .col-tasks { width: 360px; }
         .col-solved { width: 70px; }
         .col-time { width: 180px; }
+
+        /* Обрезка длинного текста с многоточием */
+        .text-ellipsis {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
 
         /* Фото */
         .photo-thumb {
@@ -96,6 +107,8 @@
             border: 1px solid #0a3;
             background: #000;
             transition: background 0.2s;
+            position: relative;
+            cursor: help;
         }
 
         .task-cell.solved {
@@ -113,6 +126,9 @@
             border: 1px solid #0f0;
             z-index: 10;
             margin-top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
         }
 
         /* Счётчик решённых */
@@ -155,9 +171,21 @@
         }
 
         /* Адаптив для маленьких экранов */
-        @media (max-width: 1200px) {
+        @media (max-width: 1400px) {
             .tasks-grid {
                 grid-template-columns: repeat(9, 1fr);
+            }
+            .col-school, .col-city {
+                display: none; /* Скрываем на узких экранах */
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .col-photo, .col-time {
+                display: none;
+            }
+            .tasks-grid {
+                grid-template-columns: repeat(6, 1fr);
             }
         }
     </style>
@@ -177,6 +205,8 @@
                     <th class="col-id">#</th>
                     <th class="col-team">Команда</th>
                     <th class="col-photo">Фото</th>
+                    <th class="col-school">Школа</th>   <!-- Новая колонка -->
+                    <th class="col-city">Город</th>      <!-- Новая колонка -->
                     <th class="col-tasks">Задачи (1-18)</th>
                     <th class="col-solved">Решено</th>
                     <th class="col-time">Старт / Финиш</th>
@@ -188,7 +218,7 @@
                     <td>{{ user.id }}</td>
                     <td style="text-align: left; padding-left: 10px;">
                         <strong>{{ user.username }}</strong><br>
-                        <small style="opacity: 0.7">{{ user.participants_full_names }}</small>
+                        <small style="opacity: 0.7">{{ user.participants_full_names[:30] }}{% if user.participants_full_names|length > 30 %}...{% endif %}</small>
                     </td>
                     <td>
                         {% if user.photo_path %}
@@ -198,9 +228,22 @@
                             <span class="no-photo">[нет]</span>
                         {% endif %}
                     </td>
+                    
+                    <!-- Новые ячейки: Школа и Город -->
+                    <td class="col-school">
+                        <span class="text-ellipsis" title="{{ user.school or '' }}">
+                            {{ user.school if user.school else '—' }}
+                        </span>
+                    </td>
+                    <td class="col-city">
+                        <span class="text-ellipsis" title="{{ user.city or '' }}">
+                            {{ user.city if user.city else '—' }}
+                        </span>
+                    </td>
+                    
                     <td>
                         <div class="tasks-grid">
-                            {% for task_num in range(1, 18) %}
+                            {% for task_num in range(1, 19) %}
                                 <div class="task-cell {% if user.tasks[task_num] %}solved{% endif %}" 
                                      data-num="{{ task_num }}"
                                      title="Задача {{ task_num }}: {% if user.tasks[task_num] %}✓ решена{% else %}✗ не решена{% endif %}">

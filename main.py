@@ -129,23 +129,27 @@ async def start_session(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/list", response_class=HTMLResponse)
 async def show_list(request: Request, db: Session = Depends(get_db)):
-    # Получаем всех пользователей кроме admin, сортируем по ID возрастанию
     users = db.query(User).filter(User.username != "admin").order_by(User.id.asc()).all()
     
-    # Подготавливаем данные для шаблона
     users_data = []
     for user in users:
-        # Создаём объект TaskStemps из поля solved_tasks (битовая маска)
         task_tracker = TaskStemps(user.solved_tasks or 0)
-        
-        # Генерируем словарь {1: True/False, 2: ..., 18: ...}
         tasks_status = {i: task_tracker.get_task(i) for i in range(1, 19)}
-        
-        # Считаем количество решённых задач
         solved_count = sum(1 for i in range(1, 19) if task_tracker.get_task(i))
         
+        # Явно извлекаем значения через getattr() — безопасно, если колонки ещё не в БД
         users_data.append({
-            **user.__dict__,
+            'id': user.id,
+            'username': user.username,
+            'participants_full_names': user.participants_full_names,
+            'email': user.email,
+            'phone': user.phone,
+            'photo_path': user.photo_path,
+            'start_time': user.start_time,
+            'end_time': user.end_time,
+            'solved_tasks': user.solved_tasks,
+            'school': getattr(user, 'school', None),   # ← безопасно
+            'city': getattr(user, 'city', None),        # ← безопасно
             'tasks': tasks_status,
             'solved_count': solved_count,
         })
@@ -463,12 +467,24 @@ async def register_post(
     phone: str = Form(""),
     photo: UploadFile = File(None),
     password: str = Form(...),
+    school: str = Form(...),        # ← ОБЯЗАТЕЛЬНОЕ поле
+    city: str = Form(...),          # ← ОБЯЗАТЕЛЬНОЕ поле
     db: Session = Depends(get_db)
-
 ):
+    errors = {}
+    
+    # 0. Валидация обязательных полей (дополнительная проверка на уровне Python)
+    if not school or not school.strip():
+        errors["school"] = "Поле 'Школа' обязательно для заполнения"
+    if not city or not city.strip():
+        errors["city"] = "Поле 'Город' обязательно для заполнения"
+    
     # 1. Проверка уникальности названия команды
     if db.query(User).filter(User.username == username).first():
-        errors = {"username": "Команда с таким названием уже существует"}
+        errors["username"] = "Команда с таким названием уже существует"
+    
+    # Если есть ошибки — возвращаем форму с данными
+    if errors:
         return templates.TemplateResponse("register.html", {
             "request": request,
             "errors": errors,
@@ -476,14 +492,15 @@ async def register_post(
                 "username": username,
                 "participants_full_names": participants_full_names,
                 "email": email,
-                "phone": phone
+                "phone": phone,
+                "school": school,      # ← сохранить в form_data
+                "city": city           # ← сохранить в form_data
             }
         })
 
     # 2. Обработка фото
     photo_path = None
     if photo and photo.filename:
-        # Проверяем расширение
         ext = Path(photo.filename).suffix.lower()
         if ext in {".png", ".jpg", ".jpeg", ".gif"}:
             filename = f"team_{uuid.uuid4().hex}{ext}"
@@ -498,12 +515,14 @@ async def register_post(
         participants_full_names=participants_full_names,
         email=email,
         phone=phone,
+        school=school,                # ← добавить в БД
+        city=city,                    # ← добавить в БД
         photo_path=photo_path,
         start_time=None,
         end_time=None,
         solved_tasks=0,
         active_task=-1,
-        password = password
+        password=password
     )
     db.add(new_team)
     db.commit()
@@ -512,7 +531,6 @@ async def register_post(
     # 4. Устанавливаем куку и показываем успех
     response = RedirectResponse(url="/login", status_code=303)
     return response
-
 
 # Админка — проверка прав
 def require_admin(request: Request, db: Session):
@@ -598,10 +616,9 @@ async def admin_edit_form(
         "solved_tasks": int(bin(user.solved_tasks)[2:][::-1])
     })
 
-# Обработка редактирования
+
 @app.post("/admin/edit/{user_id}", response_class=HTMLResponse)
 async def admin_edit_submit(
-
     request: Request,
     user_id: int,
     username: str = Form(...),
@@ -612,9 +629,11 @@ async def admin_edit_submit(
     photo: UploadFile = File(None),
     start_time: str = Form(""),
     end_time: str = Form(""),
-    solved_tasks: int = Form(0),          # ← старое числовое значение (резерв)
-    solved_tasks_bin: str = Form(""),     # ← новое бинарное значение
+    solved_tasks: int = Form(0),
+    solved_tasks_bin: str = Form(""),
     active_task: int = Form(-1),
+    school: str = Form(...),        # ← ОБЯЗАТЕЛЬНОЕ поле
+    city: str = Form(...),          # ← ОБЯЗАТЕЛЬНОЕ поле
     db: Session = Depends(get_db)
 ):
     require_admin(request, db)
@@ -632,21 +651,18 @@ async def admin_edit_submit(
                 f.write(await photo.read())
             user.photo_path = f"uploads/{filename}"
 
+    # Обработка битовой маски задач
     if solved_tasks_bin.strip():
-        # Убираем всё, кроме 0 и 1
         bin_str = ''.join(c for c in solved_tasks_bin if c in '01')
         if bin_str:
             try:
                 user.solved_tasks = int(bin_str, 2)
             except ValueError:
-                # Если что-то пошло не так — оставляем старое значение
                 pass
         else:
             user.solved_tasks = 0
     else:
-        # Если поле пустое — используем числовое значение (на всякий случай)
         user.solved_tasks = solved_tasks
-
 
     # Обновляем остальные поля
     user.username = username
@@ -654,6 +670,8 @@ async def admin_edit_submit(
     user.participants_full_names = participants_full_names
     user.email = email
     user.phone = phone
+    user.school = school          # ← добавить
+    user.city = city              # ← добавить
     user.active_task = active_task
 
     # Обработка времени

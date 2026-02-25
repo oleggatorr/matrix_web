@@ -76,6 +76,16 @@
         </div>
 
         <div class="form-group">
+            <label>Школа / Учебное заведение *</label>
+            <input name="school" value="{{ user.school or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Город *</label>
+            <input name="city" value="{{ user.city or '' }}" required>
+        </div>
+
+        <div class="form-group">
             <label>Email *</label>
             <input name="email" type="email" value="{{ user.email }}" required>
         </div>
