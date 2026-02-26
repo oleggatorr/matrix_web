@@ -330,6 +330,9 @@ async def task_page(
         elif task_id == 17:
 
             return templates.TemplateResponse(filename, context)
+        elif task_id == 18:
+
+            return templates.TemplateResponse(filename, context)
         else:
             raise HTTPException(status_code=404)
 
