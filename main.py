@@ -129,15 +129,35 @@ async def start_session(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/list", response_class=HTMLResponse)
 async def show_list(request: Request, db: Session = Depends(get_db)):
-    users = db.query(User).filter(User.username != "admin").order_by(User.id.asc()).all()
+    # Получаем пользователей из БД (базовая сортировка по ID здесь уже не критична, 
+    # так как мы будем пересортировывать список в Python)
+    users = db.query(User).filter(User.username != "admin").all()
     
     users_data = []
+    
     for user in users:
         task_tracker = TaskStemps(user.solved_tasks or 0)
+        
+        # Формируем статус задач
         tasks_status = {i: task_tracker.get_task(i) for i in range(1, 19)}
+        
+        # Считаем количество решенных задач
         solved_count = sum(1 for i in range(1, 19) if task_tracker.get_task(i))
         
-        # Явно извлекаем значения через getattr() — безопасно, если колонки ещё не в БД
+        # Вычисляем разницу времени (в секундах)
+        # Логика: если время есть, считаем дельту. Если нет - ставим бесконечность или 0,
+        # чтобы такие пользователи ушли в конец списка при равном счете.
+        time_diff = float('inf') # По умолчанию худший результат
+        if user.start_time and user.end_time:
+            try:
+                # Убедитесь, что форматы дат совместимы. 
+                # Если в БД уже datetime объекты, то вычитание работает напрямую.
+                # Если это строки, их нужно распарсить: datetime.fromisoformat(...)
+                delta = user.end_time - user.start_time
+                time_diff = delta.total_seconds()
+            except Exception:
+                time_diff = float('inf')
+
         users_data.append({
             'id': user.id,
             'username': user.username,
@@ -148,12 +168,29 @@ async def show_list(request: Request, db: Session = Depends(get_db)):
             'start_time': user.start_time,
             'end_time': user.end_time,
             'solved_tasks': user.solved_tasks,
-            'school': getattr(user, 'school', None),   # ← безопасно
-            'city': getattr(user, 'city', None),        # ← безопасно
+            'school': getattr(user, 'school', None),
+            'city': getattr(user, 'city', None),
             'tasks': tasks_status,
             'solved_count': solved_count,
+            'time_diff': time_diff,  # Сохраняем для сортировки
         })
     
+    # СОРТИРОВКА
+    # 1. key=lambda x: x['solved_count'] -> сортируем по кол-ву задач.
+    # 2. reverse=True -> по убыванию (больше задач = выше в списке).
+    # 3. Если solved_count равен, срабатывает второй элемент кортежа: x['time_diff'].
+    #    Так как reverse=True, то большее время_diff окажется выше. 
+    #    НАМ НУЖНО обратное для времени (кто быстрее - тот лучше).
+    #    Поэтому для времени используем отрицательное значение или меняем логику.
+    
+    # Вариант А: Сортировка кортежем. 
+    # Чтобы при равном счете меньшее время (быстрее) было выше, а reverse=True инвертирует всё:
+    # Нам нужно, чтобы "лучшее" время имело "большее" числовое значение при инверсии? 
+    # Проще сделать так: сортируем по (-solved_count, time_diff). 
+    # Тогда стандартная сортировка (возрастание) даст: сначала макс задачи, потом мин время.
+    
+    users_data.sort(key=lambda x: (-x['solved_count'], x['time_diff']))
+
     return templates.TemplateResponse("list.html", {
         "request": request, 
         "users": users_data

@@ -352,6 +352,106 @@
                 display: none;
             }
         }
+                /* Стили для чекбокса согласия */
+        .consent-group {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .consent-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #0c0;
+            user-select: none;
+        }
+
+        .consent-label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #0f0;
+            background: rgba(0, 20, 0, 0.8);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
+            margin-top: 2px;
+        }
+
+        .consent-label:hover .checkmark {
+            border-color: #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            background: rgba(0, 30, 0, 0.9);
+        }
+
+        .consent-label input[type="checkbox"]:checked + .checkmark {
+            background: rgba(0, 50, 0, 0.9);
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.6);
+        }
+
+        .consent-label input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            color: #0f0;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+        }
+
+        .consent-text {
+            flex: 1;
+        }
+
+        .consent-text .matrix-link {
+            color: #0f0;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(0, 255, 0, 0.5);
+            transition: all 0.2s;
+        }
+
+        .consent-text .matrix-link:hover {
+            color: #0f0;
+            border-bottom-style: solid;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+        }
+
+        .consent-group .error-message {
+            margin-top: 10px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
+
+        /* Анимация тряски при ошибке */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+            20%, 40%, 60%, 80% { transform: translateX(3px); }
+        }
+
+        .consent-group.error {
+            animation: shake 0.4s ease-in-out;
+            border-color: #ff3366 !important;
+        }
+
+        .consent-group.error .checkmark {
+            border-color: #ff3366;
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -444,6 +544,20 @@
                 {% endif %}
             </div>
 
+            <div class="form-group consent-group">
+                <label class="consent-label">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <span class="checkmark"></span>
+                    <span class="consent-text">
+                        Я подтверждаю своё согласие на обработку персональных данных
+                        <!--<a href="/privacy" target="_blank" class="matrix-link">обработку персональных данных</a> -->
+                        в соответствии с политикой конфиденциальности
+                    </span>
+                </label>
+                <div class="error-message" id="consentError">> ERROR: ACCESS DENIED. CONSENT REQUIRED.</div>
+            </div>
+
+
             <button type="submit" class="btn-register">[ ACTIVATE PROTOCOL ]</button>
         </form>
     </div>
@@ -535,6 +649,47 @@
         fileUploadText.textContent = '[ ADD PHOTO ]';
     }
     });
+
+    // Валидация чекбокса согласия
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            const consent = document.getElementById('consent');
+            const consentError = document.getElementById('consentError');
+            const consentGroup = consent.closest('.consent-group');
+            
+            if (!consent.checked) {
+                e.preventDefault();
+                
+                // Показать ошибку
+                consentError.classList.add('show');
+                consentGroup.classList.add('error');
+                
+                // Эффект "глитча" на кнопке
+                const btn = document.querySelector('.btn-register');
+                btn.style.animation = 'shake 0.4s ease-in-out';
+                setTimeout(() => {
+                    btn.style.animation = '';
+                }, 400);
+                
+                // Скрыть ошибку при клике на чекбокс
+                consent.addEventListener('change', function handler() {
+                    if (this.checked) {
+                        consentError.classList.remove('show');
+                        consentGroup.classList.remove('error');
+                        consent.removeEventListener('change', handler);
+                    }
+                }, { once: false });
+            }
+        });
+
+        // Убрать ошибку при клике на чекбокс (дополнительно)
+        document.getElementById('consent').addEventListener('change', function() {
+            const consentError = document.getElementById('consentError');
+            const consentGroup = this.closest('.consent-group');
+            if (this.checked) {
+                consentError.classList.remove('show');
+                consentGroup.classList.remove('error');
+            }
+        });
 
     </script>
 </body>
